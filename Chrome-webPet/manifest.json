@@ -1,0 +1,17 @@
+{
+    "name": "浏览器宠物",
+    "version": "1.0.0",
+    "manifest_version": 2,
+    "description": "浏览器宠物",
+    "browser_action": {
+        "default_title": "查看",
+        "default_icon": "水门.gif"
+    },
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["jquery-3.6.0.min.js","webPet.js"]
+        }
+    ],
+    "permissions" : ["tabs", "activeTab"] //向浏览器申请的权限
+}
