@@ -20,8 +20,7 @@ Chrome浏览器插件
 
 Chrome浏览器桌面换肤插件，可以选择自己喜欢的图片作为浏览器页面的背景，打造根据个性化的Chrome浏览器。
 效果：
-![效果图](https://i.loli.net/2021/08/17/zyP1bUQg4vDRpuT.png "在这里输入图片标题")
-
+![效果图](https://i.loli.net/2021/08/17/Vv4qpcuYy3GsWot.png "在这里输入图片标题")
 
 ##### 2.Chrome-webPet
 
@@ -33,7 +32,7 @@ Chrome浏览器桌面换肤插件，可以选择自己喜欢的图片作为浏�
 
 浏览器页面点击烟花特效，让你的浏览器页面更加炫酷。
 效果：
-![效果图](https://i.loli.net/2021/08/17/Vv4qpcuYy3GsWot.png "在这里输入图片标题")
+![效果图](https://i.loli.net/2021/08/17/zyP1bUQg4vDRpuT.png "在这里输入图片标题")
 
 #### 博客地址
 
