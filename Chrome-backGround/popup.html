@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="jquery-3.6.0.min.js"></script>
+    <script src="popup.js">
+    </script>
+	<style>
+		.cbtnlist{
+			display: flex;
+		}
+		.cbtnlist button{
+			border-radius: 50px;
+			height: 50px;
+			width: 50px;
+			flex: 1;
+			margin-top: 5px;
+			margin-left: 5px;
+		}
+		.cbtnlist .zhanwei{
+			height: 20px;
+		}
+		#cancelchange{
+			color: crimson;
+		}
+	</style>
+</head>
+<body style="width:300px ;height:100px">
+	<div class="cbtnlist">
+		<button id="change">更换背景颜色</button><br/>
+		<button id="changeimg">更换背景图片</button><br/>
+	</div>
+	<div class="cbtnlist">
+		<button id="cancelchange">删除背景</button><br/>
+	</div>
+	<div class="cbtnlist">
+		<div class="zhanwei"></div>
+	</div>
+</body>
+</html>
