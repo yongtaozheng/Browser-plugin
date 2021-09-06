@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="jquery-3.6.0.min.js"></script>
+	<script src="popup.js">
+	</script>
+	<style>
+		body{
+			width:300px;
+			height:100px;
+			border-radius: 10px;
+		}
+		.cbtnlist{
+			display: flex;
+		}
+		.cbtnlist button{
+			border-radius: 50px;
+			height: 50%;
+			width: 50%;
+			flex: 1;
+			margin-top: 10px;
+			margin-left: 25px;
+			line-height: 2rem;
+		}
+		.cbtnlist .zhanwei{
+			height: 20px;
+		}
+		.cbtnlist input{
+			margin:auto auto;
+			line-height: 2rem;
+		}
+		#changeBgVideo{
+			color: crimson;
+		}
+	</style>
+</head>
+<body>
+<h3 style="text-align: center">B站视频背景</h3>
+<div class="cbtnlist">
+	<input id="iframeSrc" placeholder="输入B站视频链接"/>
+</div>
+<div class="cbtnlist">
+	<button id="changeBgVideo">确定</button><br/>
+</div>
+<div class="cbtnlist">
+	<div class="zhanwei"></div>
+</div>
+</body>
+</html>

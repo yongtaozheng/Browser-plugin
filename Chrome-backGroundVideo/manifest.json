@@ -1,0 +1,19 @@
+{
+    "name": "B站视频背景",
+    "version": "1.0.0",
+    "manifest_version": 2,
+    "description": "浏览器背景视频切换--SADON_jung",
+    "browser_action": {
+        "default_title": "查看",
+        "default_icon": "1.jpg",
+        "default_popup": "popup.html"
+    },
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+			"css": ["mystyles.css"],
+            "js": ["jquery-3.6.0.min.js","changebg.js"]
+        }
+    ],
+    "permissions" : ["tabs", "activeTab"] // 向浏览器申请的权限
+}
