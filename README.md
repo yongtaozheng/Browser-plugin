@@ -34,6 +34,11 @@ Chrome浏览器桌面换肤插件，可以选择自己喜欢的图片作为浏�
 效果：
 ![效果图](https://i.loli.net/2021/08/17/zyP1bUQg4vDRpuT.png "在这里输入图片标题")
 
+##### 4.chrome-backGroundVideo
+
+将B站视频设置成浏览器背景视频
+![效果图](https://img-blog.csdnimg.cn/286b84897cc144b5a77006bd4d1874b0.gif#pic_center "在这里输入图片标题")
+
 #### 博客地址
 
 [https://blog.csdn.net/Twinkle_sone?spm=1000.2115.3001.5343](https://blog.csdn.net/Twinkle_sone?spm=1000.2115.3001.5343)
