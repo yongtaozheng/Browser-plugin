@@ -6,7 +6,7 @@ var endX;
 var endY;
 var _gx,_gy;
 var windowWidth = window.innerWidth;
-
+var isHide = false;
 //接受页面请求
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
@@ -66,6 +66,7 @@ function changebg(ind){
 	let gdiv = document.getElementById('changdiv');
 	let gbody = document.getElementsByTagName('body')[0];
 	gbody.style.opacity = '0.8';
+	isHide = false;
 	if(ind == 1){//随机切换图片
 		let num = randomNum(0,bgimg.length-1);
 		gdiv.style.backgroundImage ="url("+bgimg[num]+")";
@@ -78,6 +79,7 @@ function changebg(ind){
 		gbody.style.opacity = '1';
 		gdiv.style.backgroundImage = "";
 		gdiv.style.backgroundColor = "";
+		isHide = true;
 	}else if(ind == 4){//顺序切换背景图片
 		let num = byorder(bgimg.length);
 		gdiv.style.backgroundImage ="url("+bgimg[num]+")";
@@ -164,8 +166,21 @@ function init(){
 		gmove=false;
 	});
 }
+function keyDown(){
+	$(document).keydown(function(event){
+		if(event.ctrlKey && event.keyCode==66){
+			if(isHide){
+				changebg(1);
+			}else{
+				changebg(3);
+			}
+		}
+	});
+}
+
 init();
 changebg(1);
+keyDown();
 
 
 function getImgList(){
