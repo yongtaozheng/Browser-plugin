@@ -1,5 +1,3 @@
-var kw = $('#kw');
-var form = $('#form');
 var showind = 0;
 var gmove=false;
 var startX;
@@ -8,7 +6,6 @@ var endX;
 var endY;
 var _gx,_gy;
 var windowWidth = window.innerWidth;
-var nowLeft;
 
 //接受页面请求
 chrome.runtime.onMessage.addListener(
