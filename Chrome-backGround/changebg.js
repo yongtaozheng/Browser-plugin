@@ -67,20 +67,25 @@ function changebg(ind){
 		// 'https://i.loli.net/2021/08/17/1UyQOA5HfvClFXj.gif'
 	];
 	let gdiv = document.getElementById('changdiv');
+	let gbody = document.getElementsByTagName('body')[0];
+	gbody.style.opacity = '0.8';
 	if(ind == 1){//随机切换图片
 		let num = randomNum(0,bgimg.length-1);
 		gdiv.style.backgroundImage ="url("+bgimg[num]+")";
 		gdiv.style.backgroundRepeat = "no-repeat";
-		gdiv.style.backgroundSize = "100%";
+		gdiv.style.backgroundSize = "cover";
 	}else if(ind == 0){//随机切换背景颜色
 		let num = randomNum(0,colors.length-1);
 		gdiv.style.backgroundColor = colors[num];
 	}else if(ind == 3){//删除背景颜色和背景图片
+		gbody.style.opacity = '1';
 		gdiv.style.backgroundImage = "";
 		gdiv.style.backgroundColor = "";
 	}else if(ind == 4){//顺序切换背景图片
 		let num = byorder(bgimg.length);
 		gdiv.style.backgroundImage ="url("+bgimg[num]+")";
+		gdiv.style.backgroundRepeat = "no-repeat";
+		gdiv.style.backgroundSize = "cover";
 	}
 }
 //页面初始化

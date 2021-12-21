@@ -1,8 +1,8 @@
 {
     "name": "背景切换",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "manifest_version": 2,
-    "description": "浏览器背景切换--SADON_jung",
+    "description": "浏览器背景切换--jyeontu",
     "icons": {
        "16": "image/1.png",
        "48": "image/1.png",
