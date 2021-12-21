@@ -3,9 +3,14 @@
     "version": "1.0.0",
     "manifest_version": 2,
     "description": "浏览器背景切换--SADON_jung",
+    "icons": {
+       "16": "image/1.png",
+       "48": "image/1.png",
+       "128": "image/1.png"
+    },
     "browser_action": {
         "default_title": "查看",
-        "default_icon": "1.jpg",
+        "default_icon": "image/1.png",
         "default_popup": "popup.html"
     },
     "content_scripts": [
@@ -15,5 +20,5 @@
             "js": ["jquery-3.6.0.min.js","changebg.js"]
         }
     ],
-    "permissions" : ["tabs", "activeTab"] //向浏览器申请的权限
+    "permissions" : ["tabs", "activeTab"]
 }
