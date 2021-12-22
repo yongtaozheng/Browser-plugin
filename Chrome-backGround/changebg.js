@@ -65,8 +65,10 @@ function changebg(ind){
 	];
 	let gdiv = document.getElementById('changdiv');
 	let gbody = document.getElementsByTagName('body')[0];
+	let gbtn = document.getElementById('gbtn');
 	gbody.style.opacity = '0.8';
 	isHide = false;
+	gbtn.style.display = 'block';
 	if(ind == 1){//随机切换图片
 		let num = randomNum(0,bgimg.length-1);
 		gdiv.style.backgroundImage ="url("+bgimg[num]+")";
@@ -79,6 +81,7 @@ function changebg(ind){
 		gbody.style.opacity = '1';
 		gdiv.style.backgroundImage = "";
 		gdiv.style.backgroundColor = "";
+		gbtn.style.display = 'none';
 		isHide = true;
 	}else if(ind == 4){//顺序切换背景图片
 		let num = byorder(bgimg.length);
@@ -168,11 +171,18 @@ function init(){
 }
 function keyDown(){
 	$(document).keydown(function(event){
-		if(event.ctrlKey && event.keyCode==66){
+		//alt + z 隐藏显示
+		if(event.altKey && event.keyCode==90){
 			if(isHide){
 				changebg(1);
 			}else{
 				changebg(3);
+			}
+		}
+		//alt + x 切换
+		if(event.altKey && event.keyCode==88){
+			if(!isHide){
+				changebg(1);
 			}
 		}
 	});
