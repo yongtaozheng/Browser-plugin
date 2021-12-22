@@ -190,7 +190,7 @@ function keyDown(){
 		//alt + c 切换颜色
 		else if(event.altKey && event.keyCode==67){
 			if(!isHide){
-				changebg(1);
+				changebg(0);
 			}
 		}
 	});
