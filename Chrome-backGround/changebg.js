@@ -75,6 +75,7 @@ function changebg(ind){
 		gdiv.style.backgroundRepeat = "no-repeat";
 		gdiv.style.backgroundSize = "cover";
 	}else if(ind == 0){//随机切换背景颜色
+		gdiv.style.backgroundImage = "";
 		let num = randomNum(0,colors.length-1);
 		gdiv.style.backgroundColor = colors[num];
 	}else if(ind == 3){//删除背景颜色和背景图片
@@ -170,6 +171,7 @@ function init(){
 	});
 }
 function keyDown(){
+	//ctrlKey（metaKey）、altKey、shiftKey
 	$(document).keydown(function(event){
 		//alt + z 隐藏显示
 		if(event.altKey && event.keyCode==90){
@@ -179,8 +181,14 @@ function keyDown(){
 				changebg(3);
 			}
 		}
-		//alt + x 切换
-		if(event.altKey && event.keyCode==88){
+		//alt + x 切换图片
+		else if(event.altKey && event.keyCode==88){
+			if(!isHide){
+				changebg(1);
+			}
+		}
+		//alt + c 切换颜色
+		else if(event.altKey && event.keyCode==67){
 			if(!isHide){
 				changebg(1);
 			}
