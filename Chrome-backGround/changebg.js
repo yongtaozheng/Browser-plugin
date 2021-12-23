@@ -181,8 +181,14 @@ function keyDown(){
 				changebg(3);
 			}
 		}
-		//alt + x 切换图片
+		//alt + x 切换图片(可能会被截屏占用快捷键)
 		else if(event.altKey && event.keyCode==88){
+			if(!isHide){
+				changebg(1);
+			}
+		}
+		//alt + s 切换图片
+		else if(event.altKey && event.keyCode==83){
 			if(!isHide){
 				changebg(1);
 			}
