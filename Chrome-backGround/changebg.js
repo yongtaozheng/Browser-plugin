@@ -7,35 +7,67 @@ var endY;
 var _gx,_gy;
 var windowWidth = window.innerWidth;
 var isHide = false;
+
+const getString = function(data){
+	if(Array.isArray(data)) return data.join('');
+	return data;
+}
 //接受页面请求
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
         if (request.action == "change") {
 			changebg(0);
             sendResponse({state:'切换成功！'});
-        }
-        if (request.action == "changeimg") {
+        }else if (request.action == "changeimg") {
 			changebg(1);
             sendResponse({state:'切换成功！'});
-        }
-        if (request.action == "cancelchange") {
+        }else if (request.action == "cancelchange") {
 			changebg(3);
             sendResponse({state:'删除背景！'});
-        }
-        if (request.action == "sendData") {
+        }else if (request.action == "deleteData") {
 			let localList = localStorage.getItem('localList');
 			localList = (localList == undefined ? [] : JSON.parse(localList));
-			console.log('localList',localList);
+			let imgSrc = request.data;
+			imgSrc = getString(imgSrc);
+			for(let i = 0; i < localList.length; i++){
+				let src = localList[i];
+				src = getString(src);
+				if(src == imgSrc){
+					localList.splice(i,1);
+					break;
+				}
+			}
+			localList = JSON.stringify(localList);
+			localStorage.setItem('localList',localList);
+			changebg(1);
+            sendResponse({state:localList});
+        }else if (request.action == "sendData") {
+			let localList = localStorage.getItem('localList');
+			localList = (localList == undefined ? [] : JSON.parse(localList));
 			let rData = JSON.parse(request.data);
 			console.log('rData',rData);
 			rData.map(item=>{
-				localList.push(rData);
+				for(let i = 0; i < localList.length; i++){
+					if(getImgList(item) == getString(localList[i])){
+						break;
+					}
+					if(i == localList.length - 1){
+						localList.push(item);
+					}
+				}
 			});
-			localList = [... new Set(localList)];
 			console.log('localList',localList);
 			localList = JSON.stringify(localList);
 			localStorage.setItem('localList',localList);
-			console.log('sendData',localList);
+			changebg(1);
+            sendResponse({state:localList});
+        }else if (request.action == "addImg") {
+			let localList = localStorage.getItem('localList');
+			localList = (localList == undefined ? [] : JSON.parse(localList));
+			let rData = JSON.parse(request.data);
+			localList.push(rData);
+			localList = JSON.stringify(localList);
+			localStorage.setItem('localList',localList);
 			changebg(1);
             sendResponse({state:localList});
         }
@@ -63,7 +95,6 @@ function byorder(max){
 //切换背景
 function changebg(ind){
 	let img = getImgList();
-	console.log('img',img);
 	let colors = ['#482936','#461629','#35333c','#11659a'];
 	let bgimg = [
 		...img,
@@ -89,7 +120,11 @@ function changebg(ind){
 	gbtn.style.display = 'block';
 	if(ind == 1){//随机切换图片
 		let num = randomNum(0,bgimg.length-1);
-		gdiv.style.backgroundImage ="url("+bgimg[num]+")";
+		let src = bgimg[num];
+		if(Array.isArray(src)){
+			src = src.join('');
+		}
+		gdiv.style.backgroundImage ="url("+src+")";
 		gdiv.style.backgroundRepeat = "no-repeat";
 		gdiv.style.backgroundSize = "cover";
 	}else if(ind == 0){//随机切换背景颜色
@@ -104,7 +139,11 @@ function changebg(ind){
 		isHide = true;
 	}else if(ind == 4){//顺序切换背景图片
 		let num = byorder(bgimg.length);
-		gdiv.style.backgroundImage ="url("+bgimg[num]+")";
+		let src = bgimg[num];
+		if(Array.isArray(src)){
+			src = src.join('');
+		}
+		gdiv.style.backgroundImage ="url("+src+")";
 		gdiv.style.backgroundRepeat = "no-repeat";
 		gdiv.style.backgroundSize = "cover";
 	}
@@ -162,7 +201,6 @@ function init(){
 		gmove=true;
 		startX = e.pageX
 		startY = e.pageY
-		// console.log("move",gmove);
 		_gx=e.pageX-parseInt($("#gbtn").css("left"));
 		_gy=e.pageY-parseInt($("#gbtn").css("top"));
 	});
@@ -177,10 +215,8 @@ function init(){
 		endY = e.pageY;
 		let d = Math.sqrt((startX - endX) * (startX - endX) + (startY - endY) * (startY - endY));
 		if (d === 0 || d < 7) {
-			// console.log("执行了点击事件");
 			changebg(4);
 		} else {
-			// console.log("执行了拖拽事件");
 			if(windowWidth - endX < 60){
 				$("#gbtn").css({"left":windowWidth-20});
 			}
@@ -202,13 +238,13 @@ function keyDown(){
 		//alt + x 切换图片(可能会被截屏占用快捷键)
 		else if(event.altKey && event.keyCode==88){
 			if(!isHide){
-				changebg(1);
+				changebg(4);
 			}
 		}
 		//alt + w 切换图片
 		else if(event.altKey && event.keyCode==87){
 			if(!isHide){
-				changebg(1);
+				changebg(4);
 			}
 		}
 		//alt + c 切换颜色
