@@ -5,6 +5,7 @@
     <title>Document</title>
     <script src="jquery-3.6.0.min.js"></script>
     <script src="popup.js"></script>
+    <script src="getBase64.js"></script>
 	<style>
 		body{
 			border-radius: 1rem 1rem;
@@ -46,6 +47,19 @@
 		#cancelchange{
 			color: crimson;
 		}
+		#save-local{
+			text-align: center;
+			color: black;
+			cursor: pointer;
+		}
+		#img-show-list{
+			display: flex;
+			flex-wrap: wrap;
+		}
+		#img-show-list img::after{
+			content: 'x';
+			color: red;
+		}
 	</style>
 </head>
 <body style="width:300px ;height:100px">
@@ -56,6 +70,11 @@
 	<div class="cbtnlist">
 		<button id="cancelchange">删除背景</button><br/>
 	</div> -->
+	<div id="img-show-list"></div>
+	<div style="font-size: medium;text-align: center;font-weight: bold;">图片转成base64码</div>
+	<input accept="image/*" name="img" id="ImgFile" type="file">
+	<textarea id="ImgBase64" name="img_base64" style=" width:95%;height: 1rem;" placeholder="base64码"></textarea>
+	<div id="save-local" title="保存到浏览器缓存">保存</div>
 	<div class="cbtnlist">
 		作者简介：喜欢算法，爱打羽毛球的前端工程师。
 	</div>
@@ -63,7 +82,7 @@
 		<div class="readme">
 			<div style="text-align: center;">快捷键说明</div>
 			<div>alt + z：隐藏显示</div>
-			<div>alt + x(s)：切换图片</div>
+			<div>alt + x(w)：切换图片</div>
 			<div>alt + c：切换颜色</div>
 		</div>
 		<div class="adress">
