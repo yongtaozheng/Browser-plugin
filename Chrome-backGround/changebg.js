@@ -161,6 +161,10 @@ dbOpen.then(res => {
 	console.log('err',err);
 })
 //-----------------数据库操作结束-------------------------------
+//发送请求
+// chrome.runtime.sendMessage({name:value},function(){
+
+// })
 //接受页面请求
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
