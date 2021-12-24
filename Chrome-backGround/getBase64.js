@@ -1,9 +1,42 @@
 $(function(){
+    var db;
+    var dbName = "bgImgDb",tableName = "bgImgList";
+    let dbOpen = openDB(dbName,tableName);
+    var localListData;
+    function dbGet(key = 'localList'){
+        getDataByKey(db, tableName, key).then(res => {
+            localListData = res.data;
+            init();
+        }).catch(err => {
+            console.log("err",err);
+        })
+    };
+    function dbUpdate(data,img = ''){
+        updateDB(db, tableName, {
+            id:'localList',
+            data:data
+        });
+        localListData = data;
+        init(img);
+    };
+    function dbAdd(data){
+        addData(db, tableName, {
+            id:'localList',
+            data:data
+        });
+    };
+    dbOpen.then(res => {
+        db = res;
+        dbAdd([]);
+        dbGet();
+    }).catch(err => {
+        console.log('err',err);
+    })
+    //-----------------数据库操作结束-------------------------------
+
     //保存图片
     const saveImg = function(img){
-        let localList = localStorage.getItem('localList');
-        localList = localList ? JSON.parse(localList) : [];
-        console.log('saveImg',img);
+        let localList = localListData;
         for(let i = 0; i < localList.length; i++){
             let src = localList[i];
             if(Array.isArray(src)){
@@ -17,47 +50,11 @@ $(function(){
             }
         }
         localList.push(img);
-        localStorage.setItem('localList',JSON.stringify(localList));
-        init(img);
+        dbUpdate(localList,img);
     };
-    var db;
-    const initDb = function(){
-        let openRequest = window.indexedDB.open('imgDb', 2);
-        openRequest.onupgradeneeded = function (event) {
-            db = event.target.result;
-            var objectStore;
-            if (!db.objectStoreNames.contains('bgImgList')) {
-              objectStore = db.createObjectStore('bgImgList', { keyPath: 'id' });
-            }
-            // dbAdd();
-          }
-          
-          openRequest.onsuccess = function (e) {
-            console.log('Success!');
-            db = openRequest.result;
-          }
-          
-          openRequest.onerror = function (e) {
-            console.log('Error');
-            console.log(e);
-          }
-    };
-    // initDb();
-    let dbAdd = function() {
-        var request = db.transaction(['imgDb'], 'readwrite')
-          .objectStore('bgImgList')
-          .add({ id: 1, name: '张三', age: 24, email: 'zhangsan@example.com' });
-      
-        request.onsuccess = function (event) {
-          console.log('数据写入成功');
-        };
-      
-        request.onerror = function (event) {
-          console.log('数据写入失败');
-        }
-      }
     //base64分片
     const splitImgData = function(img){
+        return img;
         let res = [];
         if(img.length > 999999){
             let i = 0;
@@ -75,8 +72,6 @@ $(function(){
         var file = this.files[0];
         r = new FileReader();  //本地预览
         r.onload = function(){
-            // document.getElementById('ImgBase64').value = r.result;
-            console.log(r.result.length);
             let img = splitImgData(r.result);
             saveImg(img);
         }
@@ -88,30 +83,28 @@ $(function(){
         if (r==true){
             let ind = parseInt(this.getAttribute('data-ind'));
             let list = document.getElementById('img-show-list');
-            let localList = localStorage.getItem('localList');
-            localList = localList ? JSON.parse(localList) : [];
-            doDelete(localList[ind]);
+            let localList = localListData;
             localList.splice(ind,1);
-            localStorage.setItem('localList',JSON.stringify(localList));
             document.getElementById('img-show-list').innerHTML = '';
-            init();
+            dbUpdate(localList);
         }else{
             console.log('取消')
         }
     };
     //与浏览器端通信，保存图片列表一致
-    const send = function(){ 
+    function send(){ 
         chrome.tabs.query({active:true, currentWindow:true}, function (tab) {
             var state = $('#state');
             let list = document.getElementById('img-show-list');
-            let localList = localStorage.getItem('localList');
-            localList = localList ? JSON.parse(localList) : [];
+            let localList = localListData;
             chrome.tabs.sendMessage(tab[0].id, {  
-            action: "sendData",
-            data:JSON.stringify(localList)
+                action: "sendData",
+                data:JSON.stringify(localList)
             }, function (response) {
+                if(localListData == []){
+                    localListData = response.state;
+                }
                 // state.html(response.state)
-                localStorage.setItem('localList',response.state);
             });
         })
     };
@@ -119,14 +112,13 @@ $(function(){
         chrome.tabs.query({active:true, currentWindow:true}, function (tab) {
             var state = $('#state');
             let list = document.getElementById('img-show-list');
-            let localList = localStorage.getItem('localList');
-            localList = localList ? JSON.parse(localList) : [];
+            let localList = localListData;
             chrome.tabs.sendMessage(tab[0].id, {  
-            action: "addImg",
+            action: "addImg---",
             data:JSON.stringify(img)
             }, function (response) {
                 state.html(response.state)
-                localStorage.setItem('localList',response.state);
+                
             });
         })
     };
@@ -143,16 +135,17 @@ $(function(){
         })
     };
     //初始化页面
-    const init = function(img = ''){
+    function init(img = ''){
         let list = document.getElementById('img-show-list');
-        let localList = localStorage.getItem('localList');
-        localList = localList ? JSON.parse(localList) : [];
-        let ind = 0;
+        let localList = localListData;
         if(img !== ''){
-            localList = [img];
-            ind = localList.length;
+            createImg(img,localList.length - 1);
+        }else{
+            localList.map((item,index) => {
+                createImg(item,index);
+            });
         }
-        localList.map((item,index) => {
+        function createImg(item,index){
             let img = document.createElement('img');
             let src = item;
             if(Array.isArray(src)){
@@ -164,21 +157,18 @@ $(function(){
             img.style.opacity = "0.6";
             img.style.marginLeft = "2%";
             img.style.marginBottom = "5px";
-            img.setAttribute('data-ind',index + ind);
+            img.setAttribute('data-ind',index);
             img.setAttribute('title','删除该照片？');
             list.appendChild(img);
             img.onclick = deleteImg;
-        });
-        console.log(img == '');
-        if(img == '') send();
-        else addImg(img);
+        };
+        send();
     };
-    send();
-    init();
     //保存图片
     $('#save-local').click(function(){
-        let localList = localStorage.getItem('localList');
-        localList = localList ? JSON.parse(localList) : [];
+        // let localList = localStorage.getItem('localList');
+        let localList = localListData;
+        // localList = localList ? JSON.parse(localList) : [];
         let img = document.getElementById('ImgBase64').value;
         if(img.trim().length == 0){
             alert("请先选择图片");
@@ -192,7 +182,8 @@ $(function(){
             }
             localList.push(img);
         }
-        localStorage.setItem('localList',JSON.stringify(localList));
-        init(img);
+        // localStorage.setItem('localList',JSON.stringify(localList));
+        // init(img);
+        dbUpdate(localList);
     })
 })
