@@ -150,9 +150,7 @@ $(function(){
     };
     //保存图片
     $('#save-local').click(function(){
-        // let localList = localStorage.getItem('localList');
         let localList = localListData;
-        // localList = localList ? JSON.parse(localList) : [];
         let img = document.getElementById('ImgBase64').value;
         if(img.trim().length == 0){
             alert("请先选择图片");
@@ -166,8 +164,6 @@ $(function(){
             }
             localList.push(img);
         }
-        // localStorage.setItem('localList',JSON.stringify(localList));
-        // init(img);
         dbUpdate(localList);
     })
 })
