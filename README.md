@@ -22,7 +22,9 @@ javascript实现
 
 Chrome浏览器桌面换肤插件，可以选择自己喜欢的图片作为浏览器页面的背景，打造根据个性化的Chrome浏览器。
 效果：
-![效果图](https://i.loli.net/2021/08/17/Vv4qpcuYy3GsWot.png "在这里输入图片标题")
+![效果图](https://img-blog.csdnimg.cn/6189930ddc604353a4a0f6f87e820497.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAU0FET05fanVuZw==,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center)
+
+![效果图](https://img-blog.csdnimg.cn/347270b3d6774c5e9568633dc74d3795.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAU0FET05fanVuZw==,size_12,color_FFFFFF,t_70,g_se,x_16#pic_center)
 
 ##### 2.Chrome-webPet 浏览器宠物
 
