@@ -101,39 +101,23 @@ $(function(){
                 action: "sendData",
                 data:JSON.stringify(localList)
             }, function (response) {
-                if(localListData == []){
-                    localListData = response.state;
+                if(localListData.length == 0 && JSON.parse(response.state).length > 0){
+                    localListData = JSON.parse(response.state);
+                    dbUpdate(localListData)
                 }
                 // state.html(response.state)
             });
         })
     };
-    const addImg = function(img){ 
-        chrome.tabs.query({active:true, currentWindow:true}, function (tab) {
-            var state = $('#state');
-            let list = document.getElementById('img-show-list');
-            let localList = localListData;
-            chrome.tabs.sendMessage(tab[0].id, {  
-            action: "addImg---",
-            data:JSON.stringify(img)
-            }, function (response) {
-                state.html(response.state)
-                
-            });
-        })
-    };
-    //与浏览器端通信，删除图片
-    const doDelete = function(img){ 
-        chrome.tabs.query({active:true, currentWindow:true}, function (tab) {
-            var state = $('#state');
-            chrome.tabs.sendMessage(tab[0].id, {  
-            action: "deleteData",
-            data:img
-            }, function (response) {
-                state.html(response.state)
-            });
-        })
-    };
+    chrome.runtime.onMessage.addListener(
+        function(request, sender, sendResponse) {
+            console.log(sender.tab ?
+                        "from a content script:" + sender.tab.url :
+                        "from the extension");
+            if (request.greeting == "hello")
+            sendResponse({farewell: "goodbye"});
+            send();
+        });
     //初始化页面
     function init(img = ''){
         let list = document.getElementById('img-show-list');

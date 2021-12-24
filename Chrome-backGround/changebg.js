@@ -162,9 +162,12 @@ dbOpen.then(res => {
 })
 //-----------------数据库操作结束-------------------------------
 //发送请求
-// chrome.runtime.sendMessage({name:value},function(){
-
-// })
+function initDb(){
+	chrome.runtime.sendMessage({greeting: "hello"}, function(response) {
+		console.log(response.farewell);
+	});
+};
+// initDb();
 //接受页面请求
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
@@ -177,58 +180,15 @@ chrome.runtime.onMessage.addListener(
         }else if (request.action == "cancelchange") {
 			changebg(3);
             sendResponse({state:'删除背景！'});
-        }else if (request.action == "deleteData") {
-			let localList = localStorage.getItem('localList');
-			localList = (localList == undefined ? [] : JSON.parse(localList));
-			let imgSrc = request.data;
-			imgSrc = getString(imgSrc);
-			for(let i = 0; i < localList.length; i++){
-				let src = localList[i];
-				src = getString(src);
-				if(src == imgSrc){
-					localList.splice(i,1);
-					break;
-				}
-			}
-			localList = JSON.stringify(localList);
-			localStorage.setItem('localList',localList);
-			changebg(1);
-            sendResponse({state:localList});
         }else if (request.action == "sendData") {
-			// let localList = localStorage.getItem('localList');
-			// localList = (localList == undefined ? [] : JSON.parse(localList));
-			// let rData = JSON.parse(request.data);
-			// rData.map(item=>{
-			// 	for(let i = 0; i < localList.length; i++){
-			// 		if(getImgList(item) == getString(localList[i])){
-			// 			break;
-			// 		}
-			// 		if(i == localList.length - 1){
-			// 			localList.push(item);
-			// 		}
-			// 	}
-			// });
-			// localList = JSON.stringify(localList);
-			// localStorage.setItem('localList',localList);
-			// localListData = JSON.parse(request.data);
-			// localListData.push();
-			// localListData = [... new Set(localListData)];
 			let rData = JSON.parse(request.data);
-			if(rData !== []){
+			console.log('rData',rData);
+			if(rData.length > 0){
 				localListData = rData;
 				dbUpdate(localListData);
 			}
 			changebg(1);
-            sendResponse({state:localListData});
-        }else if (request.action == "addImg") {
-			let localList = localStorage.getItem('localList');
-			localList = (localList == undefined ? [] : JSON.parse(localList));
-			let rData = JSON.parse(request.data);
-			localList.push(rData);
-			localList = JSON.stringify(localList);
-			localStorage.setItem('localList',localList);
-			changebg(1);
-            sendResponse({state:localList});
+            sendResponse({state:JSON.stringify(localListData)});
         }
     }
 );
