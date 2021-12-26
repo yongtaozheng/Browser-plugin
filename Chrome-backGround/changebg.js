@@ -8,6 +8,14 @@ var _gx,_gy;
 var windowWidth = window.innerWidth;
 var isHide = false;
 var localListData;
+var localJData = {
+	localListData:[],
+	isHide:false
+};
+var showImgSrc = 'https://images8.alphacoders.com/992/992329.jpg';
+const config = {
+	colors: ['#482936','#461629','#35333c','#11659a'],
+}
 
 const getString = function(data){
 	if(Array.isArray(data)) return data.join('');
@@ -98,7 +106,7 @@ function getDataByKey(db, storeName, key) {
       };
   
       request.onsuccess = function (event) {
-        console.log("主键查询结果: ", request.result);
+        // console.log("主键查询结果: ", request.result);
         resolve(request.result);
       };
     });
@@ -116,11 +124,11 @@ function getDataByKey(db, storeName, key) {
       .put(data);
   
     request.onsuccess = function () {
-      console.log("数据更新成功");
+    //   console.log("数据更新成功");
     };
   
     request.onerror = function () {
-      console.log("数据更新失败");
+    //   console.log("数据更新失败");
     };
 }
 
@@ -167,29 +175,49 @@ function initDb(){
 		console.log(response.farewell);
 	});
 };
+//发送请求
+function sendToBackground(action){
+	chrome.runtime.sendMessage({action: action}, function(response) {
+		// console.log(response);
+	});
+};
 // initDb();
 //接受页面请求
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
-        if (request.action == "change") {
-			changebg(0);
-            sendResponse({state:'切换成功！'});
-        }else if (request.action == "changeimg") {
-			changebg(1);
-            sendResponse({state:'切换成功！'});
-        }else if (request.action == "cancelchange") {
-			changebg(3);
-            sendResponse({state:'删除背景！'});
-        }else if (request.action == "sendData") {
-			let rData = JSON.parse(request.data);
-			console.log('rData',rData);
-			if(rData.length > 0){
-				localListData = rData;
-				dbUpdate(localListData);
-			}
-			changebg(1);
-            sendResponse({state:JSON.stringify(localListData)});
-        }
+		const action = request.action;
+		switch(action){
+			case 'change':
+				changebg(0);
+				sendResponse({state:'切换成功！'});
+				break;
+			case 'changeimg':
+				changebg(1);
+				sendResponse({state:'切换成功！'});
+				break;
+			case 'cancelchange':
+				changebg(3);
+				sendResponse({state:'删除背景！'});
+				break;
+			case 'sendData':
+				let rData = JSON.parse(request.data) || [];
+				if(rData.length > 0 || request.doDelete){
+					localListData = rData;
+					dbUpdate(localListData);
+				}
+				changebg(1);
+				sendResponse({state:JSON.stringify(localListData)});
+				break;
+			case 'showImg':
+				showImg(request.data);
+				sendResponse({state:false});
+				break;
+			case 'setShowImg':
+				changebg('',request.data);
+				break;
+			default:
+				break;
+		}
     }
 );
 //生成随机数，随机切换图片
@@ -212,37 +240,22 @@ function byorder(max){
 	 return showind;
 } 
 //切换背景
-function changebg(ind){
-	let img = getImgList();
-	let colors = ['#482936','#461629','#35333c','#11659a'];
-	let bgimg = [
-		...img,
-		// 'https://images8.alphacoders.com/992/992329.jpg',
-		// 'https://images4.alphacoders.com/958/958516.jpg',
-		// 'https://images5.alphacoders.com/974/974380.jpg',
-		// 'https://images2.alphacoders.com/227/227642.jpg',
-		// 'https://i.loli.net/2021/08/17/MTg6SndXF4sVCiy.gif',
-		// 'https://i.loli.net/2021/08/17/GjtMSymTq8lD2si.gif',
-		// 'https://i.loli.net/2021/08/17/3GBeFdgKuOU7yNj.gif',
-		// 'https://i.loli.net/2021/08/17/LSn5XGEtiBerzCT.jpg',
-		// 'https://i.loli.net/2021/08/17/lvSxaI6bkEQM2Zi.gif',
-		// 'https://i.loli.net/2021/08/17/J8G3sZNvcEP25XA.gif',
-		// 'https://i.loli.net/2021/08/17/rAgy5KFLscHzoUh.gif',
-		// 'https://i.loli.net/2021/08/17/zLQiVCnldc5XOay.gif',
-		// 'https://i.loli.net/2021/08/17/1UyQOA5HfvClFXj.gif'
-	];
-	let gdiv = document.getElementById('changdiv');
-	let gbody = document.getElementsByTagName('body')[0];
-	let gbtn = document.getElementById('gbtn');
+function changebg(ind,imgSrc = ''){
+	const bgimg = getImgList(),
+		colors = config.colors,
+		gdiv = document.getElementById('changdiv'),
+		gbody = document.getElementsByTagName('body')[0],
+		gbtn = document.getElementById('gbtn');
 	gbody.style.opacity = '0.8';
 	isHide = false;
 	gbtn.style.display = 'block';
-	if(ind == 1){//随机切换图片
+	if(imgSrc !== ''){
+		gdiv.style.backgroundImage ="url("+imgSrc+")";
+		gdiv.style.backgroundRepeat = "no-repeat";
+		gdiv.style.backgroundSize = "cover";
+	}else if(ind == 1){//随机切换图片
 		let num = randomNum(0,bgimg.length-1);
 		let src = bgimg[num];
-		if(Array.isArray(src)){
-			src = src.join('');
-		}
 		gdiv.style.backgroundImage ="url("+src+")";
 		gdiv.style.backgroundRepeat = "no-repeat";
 		gdiv.style.backgroundSize = "cover";
@@ -259,17 +272,13 @@ function changebg(ind){
 	}else if(ind == 4){//顺序切换背景图片
 		let num = byorder(bgimg.length);
 		let src = bgimg[num];
-		if(Array.isArray(src)){
-			src = src.join('');
-		}
 		gdiv.style.backgroundImage ="url("+src+")";
 		gdiv.style.backgroundRepeat = "no-repeat";
 		gdiv.style.backgroundSize = "cover";
 	}
-}
-//页面初始化
-function init(){
-	//生成一个div作为图片容器
+};
+//生成一个div作为图片容器
+function generateImgContent(){
 	let gbody = document.getElementsByTagName('body')[0];
 	gbody.style.opacity = '0.8';
 	let ghtml = document.getElementsByTagName('html')[0],
@@ -283,8 +292,11 @@ function init(){
 	gdiv.style.opacity = '0.7';
 	gdiv.style.zIndex= '-1';
 	ghtml.appendChild(gdiv);
-	//页面上的切换按钮
-	let gbtn = document.createElement('div');
+};
+//生成页面上的切换按钮
+function generateBtn(){
+	let ghtml = document.getElementsByTagName('html')[0],
+		gbtn = document.createElement('div');
 	gbtn.id = 'gbtn';
 	gbtn.innerText = "切换图片";
 	gbtn.style.opacity = '0.6';
@@ -342,6 +354,113 @@ function init(){
 		}
 		gmove=false;
 	});
+};
+//生成图片预览弹框
+function generatePreviewContent(){
+	let ghtml = document.getElementsByTagName('html')[0],
+		mask = document.createElement('div'),
+		dialog = document.createElement('div');
+	mask.id = "mask";
+	dialog.id = "dialog";
+	maskStyles = {
+		position: "fixed",
+		height: '100vh',
+		width: '100vw',
+		backgroundColor: 'grey',
+		top: 0,
+		opacity:0.8,
+		zIndex:999,
+		display:'none'
+	};
+	dialogStyles = {
+		position: "fixed",
+		height: '70vh',
+		width: '50vw',
+		backgroundColor: 'white',
+		top: "10vh",
+		left: "25vw",
+		zIndex:1000,
+		display:"none",
+		flexDirection: 'column'
+	};
+	mask = tagConfingSet(mask,maskStyles);
+	dialog = tagConfingSet(dialog,dialogStyles);
+	dialog.innerHTML = `
+		<div style="height:5%;">
+			<span id="dialogCloseBtn" title="关闭" style="color:red;float: right;width: 1rem;height: 1rem;
+						background-color: gainsboro;line-height: 1rem;
+						text-align: center;border-radius: 50%;margin: 0.3rem;
+						cursor: pointer;">
+				x
+			</span>
+		</div>
+		<div style="height:100%;">
+			<img id="showImg" style="width: 100%;height: 100%;" 
+				src = "${showImgSrc}"/>
+		</div>
+		<div style="background-color: deepskyblue;display: flex;height:2rem;">
+			<div id="dialogDeleteBtn" title="删除" style="flex:1;text-align: center;cursor: pointer;line-height: 2rem;border-right: 1px solid;">删除</div>
+			<div id="dialogSetBtn" title="设为背景" style="flex:1;text-align: center;cursor: pointer;line-height: 2rem;">设为背景</div>
+		</div>
+	`
+	ghtml.appendChild(dialog);
+	$('#dialogCloseBtn').click(function(){
+		dialogBtnClick('close');
+	})
+	$('#dialogDeleteBtn').click(function(){
+		dialogBtnClick('delete');
+	})
+	$('#dialogSetBtn').click(function(){
+		dialogBtnClick('set');
+	})
+
+	ghtml.appendChild(mask);
+};
+//弹窗按钮事件
+function dialogBtnClick(method = ''){
+	const dialog = document.getElementById('dialog');
+	const mask = document.getElementById('mask');
+	switch(method){
+		case 'close':
+			dialog.style.display = 'none';
+			mask.style.display = 'none';
+			break;
+		case 'set':
+			changebg('',showImgSrc);
+			dialog.style.display = 'none';
+			mask.style.display = 'none';
+			break;
+		case 'delete':
+			sendToBackground('delete');
+			dialog.style.display = 'none';
+			mask.style.display = 'none';
+			break;
+		default:
+			break;
+	}
+}
+//图片预览
+function showImg(imgSrc){
+	const dialog = document.getElementById('dialog');
+	const mask = document.getElementById('mask');
+	const showImg = document.getElementById('showImg');
+	showImgSrc = imgSrc;
+	showImg.src = imgSrc;
+	mask.style.display = 'block';
+	dialog.style.display = 'flex';
+};
+//设置style
+function tagConfingSet(el,config){
+	for(let key in config){
+		el.style[key] = config[key];
+	}
+	return el;
+};
+//页面初始化
+function init(){
+	generateImgContent();
+	generateBtn();
+	generatePreviewContent();
 }
 function keyDown(){
 	//ctrlKey（metaKey）、altKey、shiftKey
@@ -381,6 +500,24 @@ keyDown();
 
 
 function getImgList(){
-	let localList = localListData || [];
+	const appendImgList = [
+		// 'https://images8.alphacoders.com/992/992329.jpg',
+		// 'https://images4.alphacoders.com/958/958516.jpg',
+		// 'https://images5.alphacoders.com/974/974380.jpg',
+		// 'https://images2.alphacoders.com/227/227642.jpg',
+		// 'https://i.loli.net/2021/08/17/MTg6SndXF4sVCiy.gif',
+		// 'https://i.loli.net/2021/08/17/GjtMSymTq8lD2si.gif',
+		// 'https://i.loli.net/2021/08/17/3GBeFdgKuOU7yNj.gif',
+		// 'https://i.loli.net/2021/08/17/LSn5XGEtiBerzCT.jpg',
+		// 'https://i.loli.net/2021/08/17/lvSxaI6bkEQM2Zi.gif',
+		// 'https://i.loli.net/2021/08/17/J8G3sZNvcEP25XA.gif',
+		// 'https://i.loli.net/2021/08/17/rAgy5KFLscHzoUh.gif',
+		// 'https://i.loli.net/2021/08/17/zLQiVCnldc5XOay.gif',
+		// 'https://i.loli.net/2021/08/17/1UyQOA5HfvClFXj.gif'
+	];
+	const localList = [
+		...(localListData||[]),
+		...appendImgList
+	];
 	return localList;
 }

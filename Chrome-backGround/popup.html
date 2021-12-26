@@ -6,6 +6,7 @@
     <script src="jquery-3.6.0.min.js"></script>
     <script src="indexedBb.js"></script>
     <script src="popup.js"></script>
+    <script src="dialog.js"></script>
     <script src="getBase64.js"></script>
 	<style>
 		body{
@@ -94,5 +95,24 @@
 	<div class="cbtnlist">
 		<div class="zhanwei"></div>
 	</div>
+	<div id="dialog" style="position: fixed; height: 70vh; width: 50vw;
+							 background-color: white; top: 10vh; left: 25vw; 
+							 z-index: 1000; display: none; flex-direction: column;">
+		<div style="height:100%;">
+			<span id="dialogCloseBtn" title="关闭" style="color:red;right:0;width: 1rem;height: 1rem;
+						background-color: gainsboro;line-height: 1rem;
+						text-align: center;border-radius: 50%;margin: 0.3rem;
+						cursor: pointer;position: absolute;">
+				x
+			</span>
+			<img id="showImg" style="width: 100%;height: 100%;" src="https://images8.alphacoders.com/992/992329.jpg">
+		</div>
+		<div style="background-color: deepskyblue;display: flex;height:2rem;">
+			<div id="dialogDeleteBtn" title="删除" style="flex:1;text-align: center;cursor: pointer;line-height: 2rem;border-right: 1px solid;">删除</div>
+			<div id="dialogSetBtn" title="设为背景" style="flex:1;text-align: center;cursor: pointer;line-height: 2rem;">设为背景</div>
+		</div>
+	</div>
+	<div id="mask" style="position: fixed; height: 100vh; width: 100vw; background-color: grey; 
+						top: 0px;left:0; opacity: 0.8; z-index: 999; display: none;"></div>
 </body>
 </html>
