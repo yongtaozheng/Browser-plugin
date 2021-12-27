@@ -11,7 +11,24 @@ $(function(){
         }
         r.readAsDataURL(file);    //Base64
     }
-
+    //保存图片
+    $('#save-local').click(function(){
+        let localList = localListData;
+        let img = document.getElementById('ImgBase64').value;
+        if(img.trim().length == 0){
+            alert("请先选择图片");
+            return;
+        }else{
+            for(let i = 0; i < localList.length; i++){
+                if(localList[i] == img){
+                    alert("请不要上传重复照片！");
+                    return;
+                }
+            }
+            localList.push(img);
+        }
+        dbUpdate(localList);
+    })
 });
 var localListData;
 var showInd;
@@ -19,6 +36,7 @@ var doDelete = false;
 var db;
 var dbName = "bgImgDb",tableName = "bgImgList";
 let dbOpen = openDB(dbName,tableName);
+//----------------数据库操作------------------------
 function dbGet(key = 'localList'){
     getDataByKey(db, tableName, key).then(res => {
         localListData = res.data;
@@ -54,12 +72,7 @@ function saveImg(img){
     let localList = localListData;
     for(let i = 0; i < localList.length; i++){
         let src = localList[i];
-        if(Array.isArray(src)){
-            src = src.join('');
-        }
-        let imgSrc = img;
-        Array.isArray(imgSrc) ? imgSrc = imgSrc.join('') : '';
-        if(src == imgSrc){
+        if(src == img){
             alert("请不要上传重复照片！");
             // clearInput();
             return;
@@ -132,8 +145,6 @@ chrome.runtime.onMessage.addListener(
         console.log(sender.tab ?
                     "from a content script:" + sender.tab.url :
                     "from the extension");
-        if (request.greeting == "hello")
-        sendResponse({farewell: "goodbye"});
         if(request.action == "delete"){
             deleteImg(showInd);
         }
@@ -165,30 +176,11 @@ function init(img = ''){
         img.setAttribute('data-ind',index);
         img.setAttribute('title','删除该照片？');
         list.appendChild(img);
-        // img.onclick = deleteImg;
         img.onclick = dialogShowImg;
     };
     send(doDelete);
     doDelete = false;
 };
-//保存图片
-$('#save-local').click(function(){
-    let localList = localListData;
-    let img = document.getElementById('ImgBase64').value;
-    if(img.trim().length == 0){
-        alert("请先选择图片");
-        return;
-    }else{
-        for(let i = 0; i < localList.length; i++){
-            if(localList[i] == img){
-                alert("请不要上传重复照片！");
-                return;
-            }
-        }
-        localList.push(img);
-    }
-    dbUpdate(localList);
-})
 function setShowImg(ind){
     chrome.tabs.query({active:true, currentWindow:true}, function (tab) {
         var state = $('#state');
@@ -204,10 +196,8 @@ function setShowImg(ind){
 //删除图片
 const deleteImg = function(ind=''){
     doDelete = true;
-    let r = confirm("您确定是否删除吗？");
+    let r = confirm("您确定删除吗？");
     if (r==true){
-        // ind = parseInt(this.getAttribute('data-ind'));
-        // let list = document.getElementById('img-show-list');
         let localList = localListData;
         localList.splice(ind,1);
         document.getElementById('img-show-list').innerHTML = '';

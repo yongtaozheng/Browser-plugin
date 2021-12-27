@@ -205,7 +205,12 @@ chrome.runtime.onMessage.addListener(
 					localListData = rData;
 					dbUpdate(localListData);
 				}
-				changebg(1);
+				const gdiv = document.getElementById('changdiv'),
+					tImg = gdiv.style.backgroundImage.slice(5,-2);
+				const flag = localListData.some(item => {
+					return item == tImg;
+				});
+				if(localListData.length < 2 || !flag) changebg(1);
 				sendResponse({state:JSON.stringify(localListData)});
 				break;
 			case 'showImg':
@@ -284,35 +289,39 @@ function generateImgContent(){
 	let ghtml = document.getElementsByTagName('html')[0],
 				gdiv = document.createElement('div');
 	gdiv.id = 'changdiv';
-	gdiv.style.position = 'fixed';
-	gdiv.style.width = '100%';
-	gdiv.style.height = '100%';
-	gdiv.style.top = '0px';
-	gdiv.style.left = '0px';
-	gdiv.style.opacity = '0.7';
-	gdiv.style.zIndex= '-1';
-	ghtml.appendChild(gdiv);
+	const config = {
+		position: 'fixed',
+		width: '100%',
+		height: '100%',
+		top: '0px',
+		left: '0px',
+		opacity: '0.7',
+		zIndex: '-1',
+	};
+	ghtml.appendChild(tagConfingSet(gdiv,config));
 };
 //生成页面上的切换按钮
 function generateBtn(){
 	let ghtml = document.getElementsByTagName('html')[0],
 		gbtn = document.createElement('div');
 	gbtn.id = 'gbtn';
+	const config = {
+		opacity: '0.6',
+		position: 'fixed',
+		right: '40px',
+		top: '50%',
+		border: 'solid black 1px',
+		width: '80px',
+		height: '80px',
+		borderRadius: '50% 50%',
+		lineHeight: '80px',
+		textAlign: 'center',
+		backgroundImage: "linear-gradient(#e66465, #9198e5)",
+		fontSize: "initial",
+		cursor: "pointer",
+	};
 	gbtn.innerText = "切换图片";
-	gbtn.style.opacity = '0.6';
-	gbtn.style.position = 'fixed';
-	gbtn.style.right = '40px';
-	gbtn.style.top = '50%';
-	gbtn.style.border = 'solid black 1px'
-	gbtn.style.width = '80px';
-	gbtn.style.height = '80px';
-	gbtn.style.borderRadius = '50% 50%';
-	gbtn.style.lineHeight = '80px';
-	gbtn.style.textAlign = 'center';
-	gbtn.style.backgroundImage = "linear-gradient(#e66465, #9198e5)";
-	gbtn.style.fontSize = "initial";
-	gbtn.style.cursor = "pointer";
-	ghtml.appendChild(gbtn);
+	ghtml.appendChild(tagConfingSet(gbtn,config));
 	
 	$("#gbtn").hover(function(){
 		let w = parseInt($("#gbtn").css("left"));
@@ -355,100 +364,6 @@ function generateBtn(){
 		gmove=false;
 	});
 };
-//生成图片预览弹框
-function generatePreviewContent(){
-	let ghtml = document.getElementsByTagName('html')[0],
-		mask = document.createElement('div'),
-		dialog = document.createElement('div');
-	mask.id = "mask";
-	dialog.id = "dialog";
-	maskStyles = {
-		position: "fixed",
-		height: '100vh',
-		width: '100vw',
-		backgroundColor: 'grey',
-		top: 0,
-		opacity:0.8,
-		zIndex:999,
-		display:'none'
-	};
-	dialogStyles = {
-		position: "fixed",
-		height: '70vh',
-		width: '50vw',
-		backgroundColor: 'white',
-		top: "10vh",
-		left: "25vw",
-		zIndex:1000,
-		display:"none",
-		flexDirection: 'column'
-	};
-	mask = tagConfingSet(mask,maskStyles);
-	dialog = tagConfingSet(dialog,dialogStyles);
-	dialog.innerHTML = `
-		<div style="height:5%;">
-			<span id="dialogCloseBtn" title="关闭" style="color:red;float: right;width: 1rem;height: 1rem;
-						background-color: gainsboro;line-height: 1rem;
-						text-align: center;border-radius: 50%;margin: 0.3rem;
-						cursor: pointer;">
-				x
-			</span>
-		</div>
-		<div style="height:100%;">
-			<img id="showImg" style="width: 100%;height: 100%;" 
-				src = "${showImgSrc}"/>
-		</div>
-		<div style="background-color: deepskyblue;display: flex;height:2rem;">
-			<div id="dialogDeleteBtn" title="删除" style="flex:1;text-align: center;cursor: pointer;line-height: 2rem;border-right: 1px solid;">删除</div>
-			<div id="dialogSetBtn" title="设为背景" style="flex:1;text-align: center;cursor: pointer;line-height: 2rem;">设为背景</div>
-		</div>
-	`
-	ghtml.appendChild(dialog);
-	$('#dialogCloseBtn').click(function(){
-		dialogBtnClick('close');
-	})
-	$('#dialogDeleteBtn').click(function(){
-		dialogBtnClick('delete');
-	})
-	$('#dialogSetBtn').click(function(){
-		dialogBtnClick('set');
-	})
-
-	ghtml.appendChild(mask);
-};
-//弹窗按钮事件
-function dialogBtnClick(method = ''){
-	const dialog = document.getElementById('dialog');
-	const mask = document.getElementById('mask');
-	switch(method){
-		case 'close':
-			dialog.style.display = 'none';
-			mask.style.display = 'none';
-			break;
-		case 'set':
-			changebg('',showImgSrc);
-			dialog.style.display = 'none';
-			mask.style.display = 'none';
-			break;
-		case 'delete':
-			sendToBackground('delete');
-			dialog.style.display = 'none';
-			mask.style.display = 'none';
-			break;
-		default:
-			break;
-	}
-}
-//图片预览
-function showImg(imgSrc){
-	const dialog = document.getElementById('dialog');
-	const mask = document.getElementById('mask');
-	const showImg = document.getElementById('showImg');
-	showImgSrc = imgSrc;
-	showImg.src = imgSrc;
-	mask.style.display = 'block';
-	dialog.style.display = 'flex';
-};
 //设置style
 function tagConfingSet(el,config){
 	for(let key in config){
@@ -460,7 +375,6 @@ function tagConfingSet(el,config){
 function init(){
 	generateImgContent();
 	generateBtn();
-	generatePreviewContent();
 }
 function keyDown(){
 	//ctrlKey（metaKey）、altKey、shiftKey
