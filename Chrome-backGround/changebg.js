@@ -21,6 +21,15 @@ const getString = function(data){
 	if(Array.isArray(data)) return data.join('');
 	return data;
 }
+//自定义打印样式
+function myConsole(str){
+	console.log(
+		`%c JYeontu %c ${str} %c`,
+		'background:deepskyblue ; padding: 2px; border-radius: 3px 0 0 3px;  color: #fff',
+		'background:pink ; padding: 2px; border-radius: 0 3px 3px 0;  color: #fff',
+		'background:transparent'
+	);
+};
 /**
  * 打开数据库
  * @param {object} dbName 数据库的名字
@@ -42,17 +51,17 @@ const getString = function(data){
       // 数据库打开成功回调
       request.onsuccess = function (event) {
         db = event.target.result; // 数据库对象
-        console.log("数据库打开成功");
+        myConsole("数据库打开成功");
         resolve(db);
       };
       // 数据库打开失败的回调
       request.onerror = function (event) {
-        console.log("数据库打开报错");
+        myConsole("数据库打开报错");
       };
       // 数据库有更新时候的回调
       request.onupgradeneeded = function (event) {
         // 数据库创建或升级的时候会触发
-        console.log("onupgradeneeded");
+        myConsole("onupgradeneeded");
         db = event.target.result; // 数据库对象
         var objectStore;
         // 创建存储库
@@ -82,11 +91,11 @@ function addData(db, storeName, data) {
       .add(data);
   
     request.onsuccess = function (event) {
-      console.log("数据写入成功");
+		myConsole("数据写入成功");
     };
   
     request.onerror = function (event) {
-      console.log("数据写入失败");
+		myConsole("数据写入失败");
     };
   }
   /**
@@ -102,7 +111,7 @@ function getDataByKey(db, storeName, key) {
       var request = objectStore.get(key); // 通过主键获取数据
   
       request.onerror = function (event) {
-        console.log("事务失败");
+        myConsole("事务失败");
       };
   
       request.onsuccess = function (event) {
@@ -251,6 +260,7 @@ function changebg(ind,imgSrc = ''){
 		gdiv = document.getElementById('changdiv'),
 		gbody = document.getElementsByTagName('body')[0],
 		gbtn = document.getElementById('gbtn');
+	// if(bgimg.length == 0) ind = 3;
 	gbody.style.opacity = '0.8';
 	isHide = false;
 	gbtn.style.display = 'block';
