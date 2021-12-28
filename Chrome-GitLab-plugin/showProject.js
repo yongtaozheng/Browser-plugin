@@ -201,7 +201,6 @@ var dialog = new Dialog();
 var keyFunction = new KeyFunction();
 var originDomList;
 
-console.log(window.location.href,);
 //是否在gitlab中
 if(window.location.href == gitLabAddress){
     inGitLab = true;
@@ -267,16 +266,18 @@ function keyDown(){
 	});
 }
 function dialogSearch(target){
+    if(target == '') target = 'baseUrl';
     let tar = searchConfig[target] || '';
     if(tar != ''){
-        window.open(tar,"_self");
+        if(tar !== 'null') window.open(tar,"_self");
     }else{
-        let r = confirm("跳转到GitLab？");
-        if (r==true){
-            window.open(searchConfig.baseUrl,"_self");
-        }else{
-            console.log('取消')
-        }
+        // let r = confirm("跳转到GitLab？");
+        // if (r==true){
+        //     window.open(searchConfig.baseUrl,"_self");
+        // }else{
+        //     console.log('取消')
+        // }
+        alert("未定义该关键字");
     }
 }
 init();
