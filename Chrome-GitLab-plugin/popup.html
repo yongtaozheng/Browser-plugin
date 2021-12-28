@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="jquery-3.6.0.min.js"></script>
+    <script src="popup.js"></script>
+	<style>
+		body{
+			border-radius: 1rem 1rem;
+			background-image: url('https://i.loli.net/2021/08/17/J8G3sZNvcEP25XA.gif');
+			background-size: 100%;
+			background-repeat: no-repeat;
+			color: rgb(5, 55, 71);
+		}
+		.cbtnlist{
+			display: flex;
+			margin-top: 5px;
+			font-size: medium;
+		}
+		.cbtnlist button{
+			border-radius: 50px;
+			height: 50px;
+			width: 50px;
+			flex: 1;
+			margin-top: 5px;
+			margin-left: 5px;
+		}
+		.cbtnlist .zhanwei{
+			height: 1rem;
+		}
+		.cbtnlist .readme{
+			display: flex;
+			flex-direction: column;
+			margin:  auto auto;
+		}
+		.cbtnlist .adress{
+			display: flex;
+			flex-direction: column;
+			margin:  auto auto;
+		}
+		.cbtnlist .center{
+			text-align: center;
+			width: 100%;
+		}
+		#cancelchange{
+			color: crimson;
+		}
+		#save-local{
+			text-align: center;
+			color: black;
+			cursor: pointer;
+		}
+		#img-show-list{
+			display: flex;
+			flex-wrap: wrap;
+		}
+		#img-show-list img::after{
+			content: 'x';
+			color: red;
+		}
+	</style>
+</head>
+<body style="width:300px ;height:100px">
+	<div id="img-show-list"></div>
+	<div style="font-size: medium;text-align: center;font-weight: bold;">图片上传</div>
+	<input accept="image/*" name="img" id="ImgFile" type="file">
+	<!-- <textarea id="ImgBase64" name="img_base64" style=" width:95%;height: 1rem;" placeholder="base64码"></textarea> -->
+	<!-- <div id="save-local" title="保存到浏览器缓存">保存</div> -->
+	<div class="cbtnlist">
+		作者简介：喜欢算法，爱打羽毛球的前端工程师。
+	</div>
+	<div class="cbtnlist">
+		<div class="readme">
+			<div style="text-align: center;">快捷键说明</div>
+			<div>alt + z：隐藏显示</div>
+			<div>alt + x(w)：切换图片</div>
+			<div>alt + c：切换颜色</div>
+		</div>
+		<div class="adress">
+			<div class="center">
+				源码地址：<a href="https://gitee.com/zheng_yongtao/chrome-plug-in.git" target="_blank">Gite</a>
+			</div>
+			<div class="center">
+				作者博客：<a href="https://blog.csdn.net/Twinkle_sone" target="_blank">CSDN</a>
+			</div>
+			<div class="center">
+				掘金地址：<a href="https://juejin.cn/user/440244290727294" target="_blank">掘金</a>
+			</div>
+		</div>
+	</div>
+	<div class="cbtnlist">
+		<div class="zhanwei"></div>
+	</div>
+	<div id="dialog" style="position: fixed; height: 70vh; width: 50vw;
+							 background-color: white; top: 10vh; left: 25vw; 
+							 z-index: 1000; display: none; flex-direction: column;">
+		<div style="height:100%;">
+			<span id="dialogCloseBtn" title="关闭" style="color:red;right:0;width: 1rem;height: 1rem;
+						background-color: gainsboro;line-height: 1rem;
+						text-align: center;border-radius: 50%;margin: 0.3rem;
+						cursor: pointer;position: absolute;">
+				x
+			</span>
+			<img id="showImg" style="width: 100%;height: 100%;" src="https://images8.alphacoders.com/992/992329.jpg">
+		</div>
+		<div style="background-color: deepskyblue;display: flex;height:2rem;">
+			<div id="dialogDeleteBtn" title="删除" style="flex:1;text-align: center;cursor: pointer;line-height: 2rem;border-right: 1px solid;">删除</div>
+			<div id="dialogSetBtn" title="设为背景" style="flex:1;text-align: center;cursor: pointer;line-height: 2rem;">设为背景</div>
+		</div>
+	</div>
+	<div id="mask" style="position: fixed; height: 100vh; width: 100vw; background-color: grey; 
+						top: 0px;left:0; opacity: 0.8; z-index: 999; display: none;"></div>
+</body>
+</html>

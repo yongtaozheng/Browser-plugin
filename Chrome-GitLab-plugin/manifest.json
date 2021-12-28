@@ -1,0 +1,24 @@
+{
+    "name": "GitLab插件",
+    "version": "1.0.0",
+    "manifest_version": 2,
+    "description": "GitLab插件--jyeontu",
+    "icons": {
+       "16": "image/gitlab.png",
+       "48": "image/gitlab.png",
+       "128": "image/gitlab.png"
+    },
+    "browser_action": {
+        "default_title": "GitLab插件",
+        "default_icon": "image/gitlab.png",
+        "default_popup": "popup.html"
+    },
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+			"css": ["mystyles.css"],
+            "js": ["jquery-3.6.0.min.js","util.js","showProject.js"]
+        }
+    ],
+    "permissions" : ["tabs", "activeTab"]
+}
