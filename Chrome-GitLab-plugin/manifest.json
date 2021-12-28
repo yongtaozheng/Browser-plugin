@@ -17,7 +17,7 @@
         {
             "matches": ["<all_urls>"],
 			"css": ["mystyles.css"],
-            "js": ["jquery-3.6.0.min.js","util.js","showProject.js"]
+            "js": ["jquery-3.6.0.min.js","config.js","dataBase.js","localStorage.js","util.js","showProject.js"]
         }
     ],
     "permissions" : ["tabs", "activeTab"]

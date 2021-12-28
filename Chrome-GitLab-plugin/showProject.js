@@ -1,136 +1,3 @@
-//数据库
-class DataBase{
-    constructor(dbConfig){
-        for(let key in dbConfig){
-            this[key] = dbConfig[key];
-        }
-    }
-    /**
-     * 打开数据库
-     * @param {object} dbName 数据库的名字
-     * @param {string} storeName 仓库名称
-     * @param {string} version 数据库的版本
-     * @return {object} 该函数会返回一个数据库实例
-     */
-    openDB(dbName,storeName, version = 1) {
-        return new Promise((resolve, reject) => {
-        //  兼容浏览器
-        var indexedDB =
-            window.indexedDB ||
-            window.mozIndexedDB ||
-            window.webkitIndexedDB ||
-            window.msIndexedDB;
-        let db;
-        // 打开数据库，若没有则会创建
-        const request = indexedDB.open(dbName, version);
-        // 数据库打开成功回调
-        request.onsuccess = function (event) {
-            db = event.target.result; // 数据库对象
-            myConsole("数据库打开成功");
-            resolve(db);
-        };
-        // 数据库打开失败的回调
-        request.onerror = function (event) {
-            myConsole("数据库打开报错");
-        };
-        // 数据库有更新时候的回调
-        request.onupgradeneeded = function (event) {
-            // 数据库创建或升级的时候会触发
-            myConsole("onupgradeneeded");
-            db = event.target.result; // 数据库对象
-            var objectStore;
-            // 创建存储库
-            objectStore = db.createObjectStore(storeName, {
-            keyPath: "id", // 这是主键
-            // autoIncrement: true // 实现自增
-            });
-            // 创建索引，在后面查询数据的时候可以根据索引查
-            objectStore.createIndex("link", "link", { unique: false }); 
-            objectStore.createIndex("sequenceId", "sequenceId", { unique: false });
-            objectStore.createIndex("messageType", "messageType", {
-            unique: false,
-            });
-        };
-        });
-    }
-    /**
-     * 新增数据
-     * @param {object} db 数据库实例
-     * @param {string} storeName 仓库名称
-     * @param {string} data 数据
-     */
-    addData(db, storeName, data) {
-        var request = db
-        .transaction([storeName], "readwrite") // 事务对象 指定表格名称和操作模式（"只读"或"读写"）
-        .objectStore(storeName) // 仓库对象
-        .add(data);
-    
-        request.onsuccess = function (event) {
-            myConsole("数据写入成功");
-        };
-    
-        request.onerror = function (event) {
-            myConsole("数据写入失败");
-        };
-    }
-    /**
-     * 通过主键读取数据
-     * @param {object} db 数据库实例
-     * @param {string} storeName 仓库名称
-     * @param {string} key 主键值
-     */
-    getDataByKey(db, storeName, key) {
-        return new Promise((resolve) => {
-        var transaction = db.transaction([storeName]); // 事务
-        var objectStore = transaction.objectStore(storeName); // 仓库对象
-        var request = objectStore.get(key); // 通过主键获取数据
-    
-        request.onerror = function (event) {
-            myConsole("事务失败");
-        };
-    
-        request.onsuccess = function (event) {
-            // console.log("主键查询结果: ", request.result);
-            resolve(request.result);
-        };
-        });
-    }
-    /**
-     * 更新数据
-     * @param {object} db 数据库实例
-     * @param {string} storeName 仓库名称
-     * @param {object} data 数据
-     */
-    updateDB(db, storeName, data) {
-        var request = db
-        .transaction([storeName], "readwrite") // 事务对象
-        .objectStore(storeName) // 仓库对象
-        .put(data);
-    
-        request.onsuccess = function () {
-        //   console.log("数据更新成功");
-        };
-    
-        request.onerror = function () {
-        //   console.log("数据更新失败");
-        };
-    }
-    dbGet(key){
-        return this.getDataByKey(db, this.tableName, key);
-    };
-    dbUpdate(id,data){
-        this.updateDB(db, this.tableName, {
-            id:id,
-            data:data
-        });
-    };
-    dbAdd(data,id){
-        this.addData(db, this.tableName, {
-            id:id,
-            data:data
-        });
-    };
-}
 //弹窗
 class Dialog {
     constructor(innerHTML){
@@ -172,32 +39,31 @@ class Dialog {
         mask = tagConfingSet(mask,maskStyles);
         dialog = tagConfingSet(dialog,dialogStyles);
         dialog.innerHTML = `
-            <div style="height:5%;">
-                <span id="dialogCloseBtn" title="关闭" style="color:red;float: right;width: 1rem;height: 1rem;
-                            background-color: gainsboro;line-height: 1rem;
-                            text-align: center;border-radius: 50%;margin: 0.3rem;
-                            cursor: pointer;">
+            <div style="height:5%;font-size: 16px;">
+                <span id="dialogCloseBtn" title="关闭" style="color:red;float: right;width: 16px;height: 16px;
+                            background-color: gainsboro;line-height: 16px;
+                            text-align: center;border-radius: 50%;margin: 4.8px;
+                            cursor: pointer;font-size: 16px;">
                     x
                 </span>
             </div>
-            <div style="margin-bottom:0.5rem;text-align: center;font-size: large;">
+            <div style="margin-bottom:8px;text-align: center;font-size: large;">
                 GitLab插件面板
             </div>
-            <div style="height:100%;padding: 1rem 2rem 1rem 2rem;">
-                <div style="display:flex;">
-                    <input title="GitLab地址" id="gitLabAddress" style='${this.setStyle('input','flex:4;')}' placeholder="GitLab地址"/>
-                    <span id="gitLabAddressResetBtn" style='${this.setStyle('btn','flex:1;')}'>清空</span>
-                    <span id="gitLabAddressSaveBtn" style='${this.setStyle('btn','flex:1;')}'>保存</span>
-                </div>
-                <div style="display:flex;">
-                    <input title="项目过滤" id="filterName" style='${this.setStyle('input','flex:4;')}' placeholder="保存默认过滤字段"/>
+            <div style="height:100%;padding: 16px 32px 16px 32px;font-size: 16px;">
+                <input placeholder="输入关键字按回车" id="dialogSearchInput" style="width:100%;line-height:48px;height:48px;"/>
+                <div style="display:flex;margin-top:16px;">
+                    <div style='${this.setStyle('','flex:4;display:flex;')}'>
+                        <span style="${this.setStyle('label','width:30%;')}">项目关键字</span>
+                        <input title="项目过滤" id="filterName" style='${this.setStyle('input','width:80%;')}' placeholder="保存默认过滤字段"/>
+                    </div>
                     <span id="filterNameResetBtn" style='${this.setStyle('btn','flex:1;')}'>清空</span>
                     <span id="filterNameSaveBtn" style='${this.setStyle('btn','flex:1;')}'>保存</span>
                 </div>
             </div>
-            <div style="background-color: deepskyblue;display: flex;height:2rem;">
-                <div id="dialogDeleteBtn" title="取消" style="flex:1;text-align: center;cursor: pointer;line-height: 2rem;border-right: 1px solid;">取消</div>
-                <div id="dialogSetBtn" title="确认" style="flex:1;text-align: center;cursor: pointer;line-height: 2rem;">确认</div>
+            <div style="background-color: deepskyblue;display: flex;height:32px;font-size: 16px;">
+                <div id="dialogDeleteBtn" title="取消" style="flex:1;text-align: center;cursor: pointer;line-height: 32px;border-right: 1px solid;">取消</div>
+                <div id="dialogSetBtn" title="确认" style="flex:1;text-align: center;cursor: pointer;line-height: 32px;">确认</div>
             </div>
         `
         ghtml.appendChild(dialog);
@@ -216,29 +82,23 @@ class Dialog {
         })
         $('#filterNameResetBtn').click(()=>{
             $('#filterName')[0].value = '';
-            // this.dialogBtnClick('filterNameSave','');
-        })
-        $('#gitLabAddressSaveBtn').click(()=>{
-            const filterName = $('#gitLabAddress')[0];
-            this.dialogBtnClick('gitLabAddressSave',filterName.value);
-        })
-        $('#gitLabAddressResetBtn').click(()=>{
-            $('#gitLabAddress')[0].value = '';
-            // this.dialogBtnClick('filterNameSave','');
         })
         ghtml.appendChild(mask);
     }
     setStyle(type='',style=''){
-        style += 'line-height:2.5rem;height:2.5rem;'
+        if(style != 'tip') style += 'line-height:40px;height:40px;'
         switch(type){
             case 'btn':
                 style += 'background-color: cadetblue;margin-left: 8px;text-align:center;cursor:pointer;'
                 break;
             case 'label':
-                style += ''
+                style += 'background-color:white;text-align:center;border-radius: 5px;'
                 break;
             case 'input':
                 style += ''
+                break;
+            case 'tip':
+                style += 'color:red;text-align:center;';
                 break;
             default:
                 break;
@@ -269,10 +129,6 @@ class Dialog {
                 database.dbUpdate('filterName',para);
                 alert("已保存");
                 break;
-            case 'gitLabAddressSave':
-                database.dbUpdate('gitLabAddress',para);
-                gitLabAddress = para;
-                break;
             default:
                 break;
         }
@@ -283,6 +139,9 @@ class Dialog {
         mask.style.display = 'block';
         dialog.style.display = 'flex';
         this.isHide = false;
+        let selectInput = document.getElementById('dialogSearchInput');
+        // $('#dialogSearchInput')[0].focus();
+        selectInput.focus();
     }
     close(){
         this.dialogBtnClick('close');
@@ -294,17 +153,17 @@ class KeyFunction{
         
     }
     altZ(){
-        if(inGitLab){
+        // if(inGitLab){
             if(dialog.isHide) dialog.show();
             else dialog.close();
-        }else{
-            let r = confirm("跳转到GitLab？");
-            if (r==true){
-                this.openUrl(gitLabAddress,"_blank");
-            }else{
-                console.log('取消')
-            }
-        }
+        // }else{
+            // let r = confirm("跳转到GitLab？");
+            // if (r==true){
+            //     this.openUrl(gitLabAddress,"_blank");
+            // }else{
+            //     console.log('取消')
+            // }
+        // }
     }
     openUrl(url,target){
         window.open(gitLabAddress,target);
@@ -337,18 +196,20 @@ const dbConfig = {
 var db;
 var inGitLab = false;
 var database = new DataBase(dbConfig);
-var gitLabAddress = 'http://139.9.65.112/';
+var gitLabAddress = searchConfig.baseUrl;
 var dialog = new Dialog();
 var keyFunction = new KeyFunction();
 var originDomList;
 
+console.log(window.location.href,);
 //是否在gitlab中
-if(window.location.href.indexOf(gitLabAddress) > -1){
+if(window.location.href == gitLabAddress){
     inGitLab = true;
     originDomList = document.getElementsByClassName('projects-list')[0].innerHTML;
     let dbOpen = database.openDB(dbConfig.dbName,dbConfig.tableName);
     dbOpen.then(res => {
         db = res;
+        database.setDb(db);
         initData();
     }).catch(err => {
         console.log('err',err);
@@ -395,10 +256,28 @@ function init(){
 function keyDown(){
 	$(document).keydown(function(event){
 		//alt + z
+        console.log(event,event.keyCode);
 		if(event.altKey && event.keyCode==86){
             keyFunction.altZ();
-		}
+		}else if(event.keyCode == 13){
+            if(!dialog.isHide && event.target.id=='dialogSearchInput'){
+                dialogSearch(event.target.value);
+            }
+        }
 	});
+}
+function dialogSearch(target){
+    let tar = searchConfig[target] || '';
+    if(tar != ''){
+        window.open(tar,"_self");
+    }else{
+        let r = confirm("跳转到GitLab？");
+        if (r==true){
+            window.open(searchConfig.baseUrl,"_self");
+        }else{
+            console.log('取消')
+        }
+    }
 }
 init();
 keyDown();
