@@ -51,8 +51,8 @@ class Dialog {
                 GitLab插件面板
             </div>
             <div style="height:100%;padding: 16px 32px 16px 32px;font-size: 16px;">
-                <input placeholder="输入关键字按回车" id="dialogSearchInput" style="width:100%;line-height:48px;height:48px;"/>
-                <div id="searchTip" style="width:100%;color:red;text-align:center;"></div>
+                <input placeholder="按tab键可自动补全，输入关键字按回车" id="dialogSearchInput" style="width:100%;line-height:48px;height:48px;"/>
+                <div id="searchTip" style="word-break:break-all;width:100%;color:red;text-align:center;"></div>
                 <div style="display:flex;margin-top:16px;">
                     <div style='${this.setStyle('','flex:4;display:flex;')}'>
                         <span style="${this.setStyle('label','width:30%;')}">项目关键字</span>
@@ -162,18 +162,9 @@ class KeyFunction{
     constructor(){
         
     }
-    altZ(){
-        // if(inGitLab){
-            if(dialog.isHide) dialog.show();
-            else dialog.close();
-        // }else{
-            // let r = confirm("跳转到GitLab？");
-            // if (r==true){
-            //     this.openUrl(gitLabAddress,"_blank");
-            // }else{
-            //     console.log('取消')
-            // }
-        // }
+    openPanel(){
+        if(dialog.isHide) dialog.show();
+        else dialog.close();
     }
     openUrl(url,target){
         window.open(gitLabAddress,target);
@@ -274,14 +265,24 @@ function keyDown(){
                 }
             }
             return false;
-        }else if(event.altKey && event.keyCode==86){
-            keyFunction.altZ();
+        }else if(isOpenKey(event)){
+            keyFunction.openPanel();
 		}else if(event.keyCode == 13){
             if(!dialog.isHide && event.target.id=='dialogSearchInput'){
                 dialogSearch(event.target.value);
             }
         }
 	});
+}
+//判断是否打开面板快捷键
+function isOpenKey(e){
+    const openKey = shortcutsKeys.open;
+    for(let key in openKey){
+        if(e[key] != openKey[key]){
+            return false;
+        }
+    }
+    return true;
 }
 function dialogSearch(target){
     if(target == '') target = 'baseUrl';
