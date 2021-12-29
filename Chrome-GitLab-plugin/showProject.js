@@ -288,7 +288,6 @@ function dialogSearch(para){
     para = para.trim().split(' ');
     let target = para[0];
     let type = "_self";
-    console.log('---para',para);
     if(para.length > 1 && para[1].length > 0) type = '_blank';
     if(target == '') target = 'baseUrl';
     let tar = searchConfig[target] || '';
