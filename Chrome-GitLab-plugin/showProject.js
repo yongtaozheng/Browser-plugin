@@ -88,8 +88,20 @@ class Dialog {
         let searchTip = $('#searchTip')[0];
         //获取当前快捷键跳转地址
         searchInput.oninput = function(){
-            if(searchInput.value == '') searchTip.innerText = searchConfig.baseUrl;
-            let tip = searchConfig[searchInput.value] || "";
+            let val = searchInput.value.trim();
+            let tip = '';
+            let append = '本窗口打开:';
+            if(val.length == 0) searchTip.innerText = searchConfig.baseUrl;
+            else{
+                val = val.split(' ');
+            }
+            if(val.length > 1){
+                if(val[1].length > 0){
+                    append = "新窗口打开:";
+                }
+            }
+            tip = searchConfig[val[0]] || "";
+            if(tip !== "") tip = append + tip;
             searchTip.innerText = tip;
         };
         ghtml.appendChild(mask);
@@ -151,7 +163,7 @@ class Dialog {
         let selectInput = document.getElementById('dialogSearchInput');
         // $('#dialogSearchInput')[0].focus();
         selectInput.focus();
-        $('#searchTip')[0].innerText = searchConfig.baseUrl;
+        $('#searchTip')[0].innerText = '本窗口打开:' + searchConfig.baseUrl;
     }
     close(){
         this.dialogBtnClick('close');
@@ -261,7 +273,7 @@ function keyDown(){
             for(let key in searchConfig){
                 if(key.length >= searchInput.value.length && searchInput.value == key.slice(0,searchInput.value.length)){
                     searchInput.value = key;
-                    searchTip.innerText = searchConfig[key];
+                    searchTip.innerText = '本窗口打开:' + searchConfig[key];
                 }
             }
             return false;
