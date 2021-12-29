@@ -4,7 +4,7 @@ __pycache__/
 *$py.class
 
 #config
-Chrome-GitLab-plugin/config.js
+Chrome-tools-plugin/config.js
 
 # C extensions
 *.so
