@@ -285,7 +285,7 @@ function isOpenKey(e){
     return true;
 }
 function dialogSearch(para){
-    para = para.split(' ');
+    para = para.trim().split(' ');
     let target = para[0];
     let type = "_self";
     if(para.length > 1 && para[1].length > 0) type = '_blank';
