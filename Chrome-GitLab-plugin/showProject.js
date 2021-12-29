@@ -284,18 +284,16 @@ function isOpenKey(e){
     }
     return true;
 }
-function dialogSearch(target){
+function dialogSearch(para){
+    para = para.split(' ');
+    let target = para[0];
+    let type = "_self";
+    if(para.length > 1 && para[1].length > 0) type = '_blank';
     if(target == '') target = 'baseUrl';
     let tar = searchConfig[target] || '';
     if(tar != ''){
-        if(tar !== 'null') window.open(tar,"_self");
+        if(tar !== 'null') window.open(tar,"type");
     }else{
-        // let r = confirm("跳转到GitLab？");
-        // if (r==true){
-        //     window.open(searchConfig.baseUrl,"_self");
-        // }else{
-        //     console.log('取消')
-        // }
         alert("未定义该关键字");
     }
 }

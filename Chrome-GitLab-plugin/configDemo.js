@@ -1,3 +1,4 @@
+//复制一份到当前目录，并更改文件名为config.js,修改对应配置
 //输入框快捷跳转配置
 var searchConfig = {
     baseUrl:"https://gitee.com/",//搜索框为空时跳转
