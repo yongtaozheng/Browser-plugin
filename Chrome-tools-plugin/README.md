@@ -12,7 +12,7 @@
 
 可以自定义链接关键字，在搜索框中输入相应的关键字后回车即可跳转到对应页面，目前搜索框已加入tab键自动补全功能，搜索框接受输入2个参数，使用空格隔开，参数1为必填，即关键字，参数2可选且目前不做特殊判断。只有一个参数时默认从本窗口打开新页面，两个参数时会从新窗口打开链接。
 
-
+![输入图片说明](readmeImg/%E5%BF%AB%E6%8D%B7%E8%B7%B3%E8%BD%AC.gif)
 
 #### 2、GitLab项目列表自动过滤
 
@@ -21,8 +21,7 @@
 #### 3、窗口分屏工具
 
 可以将一个窗口分为两个指定url的窗口。
-
-![image-20211229165711206](C:\Users\MT-USER\AppData\Roaming\Typora\typora-user-images\image-20211229165711206.png)
+![输入图片说明](readmeImg/%E7%AA%97%E5%8F%A3%E5%88%86%E5%B1%8F.png)
 
 #### 更多功能
 
@@ -38,7 +37,7 @@ git下载：git clone https://gitee.com/zheng_yongtao/chrome-plug-in.git
 
 #### 2、修改配置文件
 
-![image-20211229170128230](C:\Users\MT-USER\AppData\Roaming\Typora\typora-user-images\image-20211229170128230.png)
+![输入图片说明](readmeImg/%E9%85%8D%E7%BD%AEconfig.png)
 
 
 
@@ -48,7 +47,7 @@ git下载：git clone https://gitee.com/zheng_yongtao/chrome-plug-in.git
 
 将Chrome-tools-plugin这个文件夹拉入[Chrome扩展程序](chrome://extensions/)页面，如下图
 
-![image-20211229170840857](C:\Users\MT-USER\AppData\Roaming\Typora\typora-user-images\image-20211229170840857.png)
+![输入图片说明](readmeImg/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%AF%BC%E5%85%A5%E6%8F%92%E4%BB%B6.png)
 
 #### 4、页面上使用
 
