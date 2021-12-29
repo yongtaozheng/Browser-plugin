@@ -1,16 +1,16 @@
 {
-    "name": "GitLab插件",
-    "version": "1.0.0",
+    "name": "Chrome便捷助手",
+    "version": "1.0.1",
     "manifest_version": 2,
-    "description": "GitLab插件--jyeontu",
+    "description": "Chrome便捷助手，集成各种便捷操作--jyeontu",
     "icons": {
-       "16": "image/gitlab.png",
-       "48": "image/gitlab.png",
-       "128": "image/gitlab.png"
+       "16": "image/icon.png",
+       "48": "image/icon.png",
+       "128": "image/icon.png"
     },
     "browser_action": {
-        "default_title": "GitLab插件",
-        "default_icon": "image/gitlab.png",
+        "default_title": "Chrome便捷助手",
+        "default_icon": "image/icon.png",
         "default_popup": "popup.html"
     },
     "content_scripts": [

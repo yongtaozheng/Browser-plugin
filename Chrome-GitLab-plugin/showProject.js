@@ -3,7 +3,6 @@ class Dialog {
     constructor(innerHTML){
         this.generatePreviewContent(innerHTML);
         this.isHide = true;
-
     }
     //创建弹窗
     generatePreviewContent(){
@@ -49,7 +48,7 @@ class Dialog {
                 </span>
             </div>
             <div style="margin-bottom:8px;text-align: center;font-size: large;">
-                GitLab插件面板
+                Chrome便捷助手
             </div>
             <div style="height:100%;padding: 16px 32px 16px 32px;font-size: 16px;">
                 <input placeholder="按tab键可自动补全，输入关键字按回车" id="dialogSearchInput" style="width:100%;line-height:48px;height:48px;"/>
@@ -61,6 +60,13 @@ class Dialog {
                     </div>
                     <span id="filterNameResetBtn" style='${this.setStyle('btn','flex:1;')}'>清空</span>
                     <span id="filterNameSaveBtn" style='${this.setStyle('btn','flex:1;')}'>保存</span>
+                </div>
+                <div style="display:flex;margin-top:16px;">
+                    <div style='${this.setStyle('','flex:4;display:flex;')}'>
+                        <input title="屏幕1" id="splitUrl1" style='${this.setStyle('input','width:45%;')}' placeholder="屏幕1URL"/>
+                        <input title="屏幕2" id="splitUrl2" style='${this.setStyle('input','margin-left:5%;width:45%;')}' placeholder="屏幕2URL"/>
+                    </div>
+                    <span id="splitBoard" style='${this.setStyle('btn','flex:1;')}'>分屏</span>
                 </div>
             </div>
             <div style="background-color: deepskyblue;display: flex;height:32px;font-size: 16px;">
@@ -84,6 +90,13 @@ class Dialog {
         })
         $('#filterNameResetBtn').click(()=>{
             $('#filterName')[0].value = '';
+        })
+        $('#splitBoard').click(()=>{
+            let splitUrl1 = $('#splitUrl1')[0].value;
+            let splitUrl2 = $('#splitUrl2')[0].value;
+            if(splitUrl1 != '' && splitUrl2 != ''){
+                this.dialogBtnClick('splitBoard',[splitUrl1,splitUrl2]);
+            }
         })
         let searchInput = $('#dialogSearchInput')[0];
         let searchTip = $('#searchTip')[0];
@@ -149,6 +162,9 @@ class Dialog {
                 database.dbUpdate('filterName',para);
                 alert("已保存");
                 break;
+            case 'splitBoard':
+                splitScreen(para[0],para[1]);
+                break;
             default:
                 break;
         }
@@ -160,9 +176,10 @@ class Dialog {
         dialog.style.display = 'flex';
         this.isHide = false;
         let selectInput = document.getElementById('dialogSearchInput');
-        // $('#dialogSearchInput')[0].focus();
         selectInput.focus();
         $('#searchTip')[0].innerText = '本窗口打开:' + searchConfig.baseUrl;
+        $('#splitUrl1')[0].value = location.href;
+        $('#splitUrl2')[0].value = location.href;
     }
     close(){
         this.dialogBtnClick('close');
@@ -258,6 +275,10 @@ function filterByName(filterName){
             i--;
         }
     }
+}
+//页面分屏
+function splitScreen(url1,url2){
+    document.write('<HTML><HEAD></HEAD><FRAMESET COLS=\'50%25,*\'><FRAME SRC=' + url1 + '><FRAME SRC=' + url1 + '></FRAMESET></HTML>')
 }
 //页面初始化
 function init(){
