@@ -252,7 +252,7 @@ function filterByName(filterName){
 function init(){
 
 }
-
+//监听键盘事件
 function keyDown(){
 	$(document).keydown(function(event){
 		if(event.keyCode==9){
@@ -288,11 +288,12 @@ function dialogSearch(para){
     para = para.trim().split(' ');
     let target = para[0];
     let type = "_self";
+    console.log('---para',para);
     if(para.length > 1 && para[1].length > 0) type = '_blank';
     if(target == '') target = 'baseUrl';
     let tar = searchConfig[target] || '';
     if(tar != ''){
-        if(tar !== 'null') window.open(tar,"type");
+        if(tar !== 'null') window.open(tar,type);
     }else{
         alert("未定义该关键字");
     }
