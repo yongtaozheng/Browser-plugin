@@ -5,6 +5,7 @@ class Dialog {
         this.isHide = true;
 
     }
+    //创建弹窗
     generatePreviewContent(){
         let ghtml = document.getElementsByTagName('html')[0],
             mask = document.createElement('div'),
@@ -31,7 +32,7 @@ class Dialog {
             zIndex:1000,
             display:"none",
             flexDirection: 'column',
-            "background-image": 'url(https://i.loli.net/2021/08/17/J8G3sZNvcEP25XA.gif)',
+            "background-image": 'url(' + pageConfig.backgroundImg + ')',
             "background-size": '100%',
             "background-repeat": 'no-repeat',
             opacity:0.7,
@@ -127,8 +128,6 @@ class Dialog {
         return style;
     }
     dialogBtnClick(method = '',para = ''){
-        // if(para != '') para = para.split(',');
-        // para = JSON.stringify(para);
         const dialog = document.getElementById('dialog');
         const mask = document.getElementById('mask');
         switch(method){

@@ -16,3 +16,8 @@ var shortcutsKeys = {
         keyCode:keyBoardKeyConfig['v']//其他键
     }
 }
+//页面样式配置
+var pageConfig = {
+    //base64或在线链接
+    backgroundImg:'https://i.loli.net/2021/08/17/J8G3sZNvcEP25XA.gif'
+}
