@@ -52,6 +52,7 @@ class Dialog {
             </div>
             <div style="height:100%;padding: 16px 32px 16px 32px;font-size: 16px;">
                 <input placeholder="输入关键字按回车" id="dialogSearchInput" style="width:100%;line-height:48px;height:48px;"/>
+                <div id="searchTip" style="width:100%;color:red;text-align:center;"></div>
                 <div style="display:flex;margin-top:16px;">
                     <div style='${this.setStyle('','flex:4;display:flex;')}'>
                         <span style="${this.setStyle('label','width:30%;')}">项目关键字</span>
@@ -83,6 +84,14 @@ class Dialog {
         $('#filterNameResetBtn').click(()=>{
             $('#filterName')[0].value = '';
         })
+        let searchInput = $('#dialogSearchInput')[0];
+        let searchTip = $('#searchTip')[0];
+        //获取当前快捷键跳转地址
+        searchInput.oninput = function(){
+            if(searchInput.value == '') searchTip.innerText = searchConfig.baseUrl;
+            let tip = searchConfig[searchInput.value] || "";
+            searchTip.innerText = tip;
+        };
         ghtml.appendChild(mask);
     }
     setStyle(type='',style=''){
@@ -142,6 +151,7 @@ class Dialog {
         let selectInput = document.getElementById('dialogSearchInput');
         // $('#dialogSearchInput')[0].focus();
         selectInput.focus();
+        $('#searchTip')[0].innerText = searchConfig.baseUrl;
     }
     close(){
         this.dialogBtnClick('close');
@@ -254,9 +264,17 @@ function init(){
 
 function keyDown(){
 	$(document).keydown(function(event){
-		//alt + z
-        console.log(event,event.keyCode);
-		if(event.altKey && event.keyCode==86){
+		if(event.keyCode==9){
+            let searchInput = $('#dialogSearchInput')[0];
+            let searchTip = $('#searchTip')[0];
+            for(let key in searchConfig){
+                if(key.length >= searchInput.value.length && searchInput.value == key.slice(0,searchInput.value.length)){
+                    searchInput.value = key;
+                    searchTip.innerText = searchConfig[key];
+                }
+            }
+            return false;
+        }else if(event.altKey && event.keyCode==86){
             keyFunction.altZ();
 		}else if(event.keyCode == 13){
             if(!dialog.isHide && event.target.id=='dialogSearchInput'){
