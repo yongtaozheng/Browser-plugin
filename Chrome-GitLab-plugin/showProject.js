@@ -278,7 +278,7 @@ function filterByName(filterName){
 }
 //页面分屏
 function splitScreen(url1,url2){
-    document.write('<HTML><HEAD></HEAD><FRAMESET COLS=\'50%25,*\'><FRAME SRC=' + url1 + '><FRAME SRC=' + url1 + '></FRAMESET></HTML>')
+    document.write('<HTML><HEAD></HEAD><FRAMESET COLS=\'50%25,*\'><FRAME SRC=' + url1 + '><FRAME SRC=' + url2 + '></FRAMESET></HTML>')
 }
 //页面初始化
 function init(){
