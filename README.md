@@ -12,9 +12,10 @@ javascript实现
 #### 安装教程
 
 1.  git clone https://gitee.com/zheng_yongtao/chrome-plug-in.git
-2.  根据教程修改相关文件配置
-3.  将文件夹拉进chrome扩展
-4.  给我点个星星，刷新页面就可看到效果了
+2.  查看对应项目的readme文件
+3.  根据教程修改相关文件配置
+4.  将文件夹拉进chrome扩展
+5.  给我点个星星，刷新页面就可看到效果了
 
 #### 使用说明
 
