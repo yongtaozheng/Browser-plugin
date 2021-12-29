@@ -44,7 +44,7 @@ Chrome浏览器桌面换肤插件，可以选择自己喜欢的图片作为浏�
 将B站视频设置成浏览器背景视频
 ![效果图](https://img-blog.csdnimg.cn/286b84897cc144b5a77006bd4d1874b0.gif#pic_center "在这里输入图片标题")
 
-#### 5.chrome-tools-plugin 浏览器便捷助手
+##### 5.chrome-tools-plugin 浏览器便捷助手
 稍稍模仿了alfred的一些功能，目前实现了快捷键跳转，GitLab项目过滤，窗口分屏功能，更多功能正在设计开发中……
 ![输入图片说明](Chrome-tools-plugin/readmeImg/%E5%BF%AB%E6%8D%B7%E8%B7%B3%E8%BD%AC.gif)
 #### 博客地址
