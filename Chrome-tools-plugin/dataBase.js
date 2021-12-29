@@ -103,6 +103,7 @@ class DataBase{
      * @param {object} data 数据
      */
     updateDB(db,storeName, data) {
+        console.log(db,storeName,data);
         var request = db
         .transaction([storeName], "readwrite") // 事务对象
         .objectStore(storeName) // 仓库对象
@@ -117,7 +118,7 @@ class DataBase{
         };
     }
     
-    setDb(){
+    setDb(db){
         this.db = db;
     }
     dbGet(key){
