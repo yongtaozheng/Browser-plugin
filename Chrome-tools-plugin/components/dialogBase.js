@@ -6,7 +6,8 @@
  * @Description: "弹窗组件类封装"
  */
 class Dialog {
-    constructor(innerHTML){
+    constructor(innerHTML,config = {}){
+        this.config = config;
         this.dialogInit();
         this.generatePreviewContent(innerHTML);
     }
@@ -43,15 +44,15 @@ class Dialog {
         };
         let dialogStyles = {
             position: "fixed",
-            height: '70vh',
-            width: '50vw',
+            height: this.config.height || '70vh',
+            width: this.config.width || '50vw',
             backgroundColor: 'white',
-            top: "10vh",
-            left: "25vw",
+            top: this.config.top || "10vh",
+            left: this.config.left || "25vw",
             zIndex:1000,
             display:"none",
             flexDirection: 'column',
-            "background-image": 'url(' + pageConfig.backgroundImg + ')',
+            "background-image": 'url(' + this.config.backgroundImg + ')',
             "background-size": '100%',
             "background-repeat": 'no-repeat',
             opacity:0.7,

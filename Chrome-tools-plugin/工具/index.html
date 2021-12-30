@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico" />
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>常用加密解密工具</title>
+    <script src="./zepto.min.js"></script>
+    <script src="./crypto-js/crypto-js.js"> </script>
+    <script src="./index.js"></script>
+
+    <link rel="stylesheet" href="./base.css">
+    <link rel="stylesheet" href="./index.css">
+</head>
+
+<body>
+    <div id="mainContent" class="wrapper">
+        <div class="toolUsing clearfix">
+            <div class="leftBar">
+                <div class="title">明文:</div>
+                <textarea name="message" id="msg_source" value="" class="text_source"></textarea>
+            </div>
+
+            <div class="operateLR">
+                <div class="OptDetail">
+                    <label>加密算法:</label>
+                    <ul>
+                        <li><label for="aes" class="radio"><input type="radio" name="encrypt_type" value="aes" checked="checked" id="aes">AES(app后台)</label></li>
+                        <li><label for="des" class="radio"><input type="radio" name="encrypt_type" value="des" checked="checked" id="des">DES(网优之家)</label></li>
+                        <li><label for="base64" class="radio"><input type="radio" name="encrypt_type" value="base64" checked="checked" id="base64">Base64编/解码</label></li>
+                        <li><label for="m2" class="radio"><input type="radio" name="encrypt_type" value="m2" checked="checked" id="m2">M2(密码加密)</label></li>
+                    </ul>
+                </div>
+                <div class="OptDetail Button">
+                    <ul>
+                        <li><button class="btn btn-primary" onclick="javascript:encrypt();">加密 &gt;&gt; </button></li>
+                        <li><button class="btn btn-primary" onclick="javascript:decrypt();">&lt;&lt; 解密 </button></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="rightBar">
+                <div class="title">密文:</div>
+                <textarea name="cipher" id="encrypt_result"></textarea>
+            </div>
+
+            <script type="text/javascript">
+                //加密
+                function encrypt() {
+                    var type = $('input[name="encrypt_type"]:checked').val();
+                    var funcsMap = {
+                        'aes': value => MTB64Coder.encodeAes(value),
+                        'des': value => MTB64Coder.encodeDes(value),
+                        'base64': value => MTB64Coder.encode(value),
+                        'm2': value => MTB64Coder.encodeM2(value),
+
+                    };
+                    var func = funcsMap[type];
+                    var soure = $("#msg_source").val();
+                    if (!func) {
+                        alert(`不存在${type}的加密方法`);
+                        return;
+                    }
+                    try {
+                        var result = func(soure);
+                        $("#encrypt_result").val(result);
+
+                    } catch (error) {
+                        alert(`加密失败：${error}`);
+                    }
+                }
+                //解密
+                function decrypt() {
+                    var type = $('input[name="encrypt_type"]:checked').val();
+                    var funcsMap = {
+                        'aes': value => MTB64Coder.decodeAes(value),
+                        'des': value => MTB64Coder.decodeDes(value),
+                        'base64': value => MTB64Coder.decode(value),
+                        'm2': value => MTB64Coder.decodeM2(value),
+
+                    };
+                    var func = funcsMap[type];
+                    var decodeSoure = $('#encrypt_result').val();
+
+                    if (!func) {
+                        alert(`不存在${type}的解密方法`);
+                        return;
+                    }
+                    try {
+
+                        var decrptValue = func && func(decodeSoure);
+                        $("#msg_source").val(decrptValue);
+
+                    } catch (error) {
+                        alert(`解密失败：${error}`);
+                    }
+                }
+            </script>
+        </div>
+    </div>
+</body>
+
+</html>

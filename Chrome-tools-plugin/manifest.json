@@ -1,8 +1,8 @@
 {
     "name": "Chrome便捷助手",
-    "version": "1.0.1",
+    "version": "1.0.0",
     "manifest_version": 2,
-    "description": "Chrome便捷助手，集成各种便捷操作--jyeontu",
+    "description": "Chrome便捷助手--jyeontu",
     "icons": {
        "16": "image/icon.png",
        "48": "image/icon.png",
@@ -16,11 +16,16 @@
     "content_scripts": [
         {
             "matches": ["<all_urls>"],
-			"css": ["mystyles.css"],
-            "js": ["jquery-3.6.0.min.js","keyBoardKeyConfig.js",
-                "config.js","dataBase.js","localStorage.js",
-                "util.js","dialogBase.js","panel.js",
-                "showProject.js"]
+			"css": ["css/mystyles.css","工具/base.css","工具/index.css"],
+            "js": ["else/jquery-3.6.0.min.js","工具/zepto.min.js",
+                "configs/keyBoardKeyConfig.js","configs/config.js",
+                "工具/crypto-js/crypto-js.js","工具/index.js",
+                "工具/crypto-js/aes.js",
+                "工具/crypto-js/cipher-core.js","工具/crypto-js/core.js",
+                "工具/crypto-js/enc-base64.js",
+                "工具/crypto-js/md5.js","dataBases/dataBase.js","utils/localStorage.js",
+                "utils/util.js","components/dialogBase.js","index.js","views/panel.js",
+                "views/secret.js","views/translationView.js"]
         }
     ],
     "permissions" : ["tabs", "activeTab"]

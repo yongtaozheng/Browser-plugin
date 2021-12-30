@@ -4,7 +4,7 @@ __pycache__/
 *$py.class
 
 #config
-Chrome-tools-plugin/config.js
+Chrome-tools-plugin/configs/config.js
 
 # C extensions
 *.so

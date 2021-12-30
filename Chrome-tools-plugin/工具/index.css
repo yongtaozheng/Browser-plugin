@@ -1,0 +1,27 @@
+  .leftBar .title,
+  .rightBar .title {
+      margin-bottom: 10px;
+  }
+
+  .OptDetail {
+      text-align: left;
+      margin-left: 10px;
+  }
+
+  .OptDetail li {
+      width: 120px;
+      margin: 5px 0px 10px 0px;
+  }
+
+  .Button input {
+      margin: 5px 0px 10px 0px;
+  }
+
+  #pwd {
+      width: 110px;
+  }
+  .btn.btn-info, .btn.btn-primary {
+    background-color: #1f75cb;
+    border-color: #1068bf;
+    color: #fff;
+}

@@ -3,7 +3,7 @@ let innerHtml = `
         Chrome便捷助手
     </div>
     <div style="height:100%;padding: 16px 32px 16px 32px;font-size: 16px;">
-        <input placeholder="按tab键可自动补全，输入关键字按回车" id="dialogSearchInput" class="dialogSearchInput" style="width:100%;line-height:48px;height:48px;"/>
+        <input ${panelConfig.autocomplete ? 'autocomplete="off"' : '' } placeholder="按tab键可自动补全，输入关键字按回车" id="dialogSearchInput" class="dialogSearchInput" style="width:100%;line-height:48px;height:48px;"/>
         <div class="searchTip" style="word-break:break-all;width:100%;color:red;text-align:center;"></div>
         <div style="display:flex;margin-top:16px;">
             <div style='${this.setStyle('','flex:4;display:flex;')}'>
@@ -27,8 +27,10 @@ let innerHtml = `
     </div>
     `;
 
-var panel = new Dialog(innerHtml);
+var panel = new Dialog(innerHtml,panelConfig);
 let panelDom = document.getElementById(panel.dialogId);
+viewsList["panel"] = panel;
+
 let searchInput = panelDom.getElementsByClassName('dialogSearchInput')[0];
 let searchTip = panelDom.getElementsByClassName('searchTip')[0];
 
@@ -146,7 +148,11 @@ function keyDown(){
         }
 	};
     $(document).keydown(function(event){
-		if(isOpenKey(event)){
+        if(event.keyCode == 27){
+            for(let k in viewsList){
+                viewsList[k].close();
+            }
+        }else if(isOpenKey(event)){
             openPanel();
 		}
 	});
@@ -173,9 +179,20 @@ function isOpenKey(e){
     }
     return true;
 }
+const targetMap = {
+    解密:'secret',
+    翻译:'translation'
+};
 function dialogSearch(para){
     para = para.trim().split(' ');
     let target = para[0];
+    if(Object.keys(targetMap).includes(target)){
+        for(let k in viewsList){
+            if(k == targetMap[target]) viewsList[k].open();
+            else viewsList[k].close();
+        }
+        return;
+    }
     let type = "_self";
     if(para.length > 1 && para[1].length > 0) type = '_blank';
     if(target == '') target = 'baseUrl';
