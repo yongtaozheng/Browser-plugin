@@ -48,7 +48,7 @@ const decryptDES = function (word) {
     return decryptedStr.toString();
 };
 
-class MTB64Coder {
+class JYeontuB64Coder {
 
 
     static encode(input) {
@@ -64,7 +64,7 @@ class MTB64Coder {
 
     static encodeM2(input) {
 
-        var output = MTB64Coder.encode(input);
+        var output = JYeontuB64Coder.encode(input);
         if (output.length > 3) {
             var partPos = Math.floor(output.length / 3);
             var part1 = output.substr(0, partPos);
@@ -85,7 +85,7 @@ class MTB64Coder {
             encodeStr = input;
         }
 
-        return MTB64Coder.decode(encodeStr);
+        return JYeontuB64Coder.decode(encodeStr);
     }
 
     // AES解密
@@ -108,4 +108,4 @@ class MTB64Coder {
         return decryptDES(input);
     }
 }
-window.MTB64Coder = MTB64Coder;
+window.JYeontuB64Coder = JYeontuB64Coder;

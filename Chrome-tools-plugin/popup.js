@@ -2,7 +2,7 @@
  * @Author: zheng yong tao
  * @Date: 2021-12-30 21:59:16
  * @LastEditors: zheng yong tao
- * @LastEditTime: 2022-01-09 00:17:05
+ * @LastEditTime: 2022-01-09 00:44:07
  * @Description: 
  */
 $(function(){
@@ -58,8 +58,8 @@ const getKeys = function(obj){
     res.push(getKeyByValue(obj.keyCode));
     return res.join(' + ');
 };
-dom.innerHTML = `
-    <div style="text-align: center;">快捷键说明</div>
-    <div>${getKeys(shortcutsKeys.open)}：打开操作面板</div>
-    <div>${getKeys(shortcutsKeys.translationOpen)}：打开翻译面板</div>
-`;
+let fastKeysInnerHtml = `<div style="text-align: center;">快捷键说明</div>`;
+for(let key in shortcutsKeys){
+    fastKeysInnerHtml += `<div>${getKeys(shortcutsKeys[key].fastKeyCode)}：${shortcutsKeys[key].descript}</div>`
+}
+dom.innerHTML = fastKeysInnerHtml;

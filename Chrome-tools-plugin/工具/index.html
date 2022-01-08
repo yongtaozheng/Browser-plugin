@@ -52,10 +52,10 @@
                 function encrypt() {
                     var type = $('input[name="encrypt_type"]:checked').val();
                     var funcsMap = {
-                        'aes': value => MTB64Coder.encodeAes(value),
-                        'des': value => MTB64Coder.encodeDes(value),
-                        'base64': value => MTB64Coder.encode(value),
-                        'm2': value => MTB64Coder.encodeM2(value),
+                        'aes': value => JYeontuB64Coder.encodeAes(value),
+                        'des': value => JYeontuB64Coder.encodeDes(value),
+                        'base64': value => JYeontuB64Coder.encode(value),
+                        'm2': value => JYeontuB64Coder.encodeM2(value),
 
                     };
                     var func = funcsMap[type];
@@ -76,10 +76,10 @@
                 function decrypt() {
                     var type = $('input[name="encrypt_type"]:checked').val();
                     var funcsMap = {
-                        'aes': value => MTB64Coder.decodeAes(value),
-                        'des': value => MTB64Coder.decodeDes(value),
-                        'base64': value => MTB64Coder.decode(value),
-                        'm2': value => MTB64Coder.decodeM2(value),
+                        'aes': value => JYeontuB64Coder.decodeAes(value),
+                        'des': value => JYeontuB64Coder.decodeDes(value),
+                        'base64': value => JYeontuB64Coder.decode(value),
+                        'm2': value => JYeontuB64Coder.decodeM2(value),
 
                     };
                     var func = funcsMap[type];

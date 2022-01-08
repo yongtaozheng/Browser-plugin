@@ -59,7 +59,6 @@ panelDom.getElementsByClassName('splitBoard')[0].onclick = ()=>{
 //获取当前快捷键跳转地址
 searchInput.oninput = function(){
     let val = replaceSpace2One(searchInput.value.trim());
-    console.log('------',openPenalKeys,val,openPenalKeys[val]);
     if(openPenalKeys[val] != undefined) {
         searchTip.innerText = openPenalKeys[val];
         return;
@@ -138,7 +137,7 @@ function initData() {
 //监听键盘事件
 function keyDown(){
 	panelDom.onkeydown = function(event){
-		if(event.keyCode==9){
+		if(event.keyCode==9){//回车自动补全
             for(let key in {...searchConfig,...openPenalKeys}){
                 if(key.length >= searchInput.value.length && searchInput.value == key.slice(0,searchInput.value.length)){
                     searchInput.value = key;
@@ -157,49 +156,44 @@ function keyDown(){
             for(let k in viewsList){
                 viewsList[k].close();
             }
-        }else if(isOpenKey(event)){
-            openPanel();
-		}else if(isTranslationOpenKey(event)){
-            openTranslationPanel();
-        }
+        }else{
+            let panelName = isOpenKey(event);
+            if(!panelName) return;
+            openPanel(panelName);
+		}
 
 	});
 }
-function openPanel(){
-    if(panel.isHide) {
-        panel.open();
-        searchInput.focus();
-        let url1 = panelDom.getElementsByClassName('splitUrl1')[0];
-        let url2 = panelDom.getElementsByClassName('splitUrl2')[0];
-        searchTip.innerText = '本窗口打开:' + searchConfig.baseUrl;
-        url1.value = location.href;
-        url2.value = location.href;
+function openPanel(panelName){
+    if(panelName == 'panel'){
+        if(panel.isHide) {
+            panel.open();
+            searchInput.focus();
+            let url1 = panelDom.getElementsByClassName('splitUrl1')[0];
+            let url2 = panelDom.getElementsByClassName('splitUrl2')[0];
+            searchTip.innerText = '本窗口打开:' + searchConfig.baseUrl;
+            url1.value = location.href;
+            url2.value = location.href;
+        }
+        else panel.close();
+    }else{
+        if(viewsList[panelName].isHide) viewsList[panelName].open();
+        else viewsList[panelName].close();
     }
-    else panel.close();
-};
-function openTranslationPanel(){
-    if(viewsList.translation.isHide) viewsList.translation.open();
-    else viewsList.translation.close();
 };
 //判断是否打开面板快捷键
 function isOpenKey(e){
-    const openKey = shortcutsKeys.open;
-    for(let key in openKey){
-        if(e[key] != openKey[key]){
-            return false;
+    for(let k in shortcutsKeys){
+        let flag = 0;
+        for(let key in shortcutsKeys[k].fastKeyCode){
+            if(e[key] != shortcutsKeys[k].fastKeyCode[key]){
+                break;
+            }
+            flag++;
         }
+        if(flag == 4) return shortcutsKeys[k].penalName;
     }
-    return true;
-}
-//判断是否打开翻译面板快捷键
-function isTranslationOpenKey(e){
-    const openKey = shortcutsKeys.translationOpen;
-    for(let key in openKey){
-        if(e[key] != openKey[key]){
-            return false;
-        }
-    }
-    return true;
+    return false;
 }
 const targetMap = {
     解密:'secret',
