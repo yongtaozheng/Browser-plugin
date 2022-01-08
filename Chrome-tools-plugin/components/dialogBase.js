@@ -2,7 +2,7 @@
  * @Author: zheng yong tao
  * @Date: 2021-12-30 00:51:37
  * @LastEditors: zheng yong tao
- * @LastEditTime: 2021-12-30 02:21:36
+ * @LastEditTime: 2022-01-08 23:43:23
  * @Description: "弹窗组件类封装"
  */
 class Dialog {
@@ -38,8 +38,8 @@ class Dialog {
             width: '100vw',
             backgroundColor: 'grey',
             top: 0,
-            opacity:0.8,
-            zIndex:999,
+            opacity:0.9,
+            zIndex:2147483646,
             display:'none'
         };
         let dialogStyles = {
@@ -49,7 +49,7 @@ class Dialog {
             backgroundColor: 'white',
             top: this.config.top || "10vh",
             left: this.config.left || "25vw",
-            zIndex:1000,
+            zIndex:2147483647,
             display:"none",
             flexDirection: 'column',
             "background-image": 'url(' + this.config.backgroundImg + ')',

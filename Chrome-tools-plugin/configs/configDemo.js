@@ -2,7 +2,7 @@
  * @Author: zheng yong tao
  * @Date: 2021-12-30 21:59:16
  * @LastEditors: zheng yong tao
- * @LastEditTime: 2021-12-30 22:04:41
+ * @LastEditTime: 2022-01-08 23:52:56
  * @Description: 
  */
 //复制一份到当前目录，并更改文件名为config.js,修改对应配置
@@ -17,6 +17,9 @@ var searchConfig = {
     jenkins:'http://21.jenkins.frp.mastercom.top/view/H5/job/广东掌上运维-lerna/',
     yapi:'http://193.112.218.97:3000/project/28/interface/api',
 	mr:"http://139.9.65.112/webapp/guangdong-palm-ops/-/merge_requests/new",
+}
+//快速打开面板关键字
+var openPenalKeys = {
     解密:"打开解密面板",
     翻译:"打开翻译面板"
 }
@@ -28,6 +31,13 @@ var shortcutsKeys = {
         altKey:true,//是否按住alt
         shiftKey:false,//是否按住shift
         keyCode:keyBoardKeyConfig['v']//其他键
+    },
+    //打开翻译面板
+    translationOpen:{
+        ctrlKey:false,//是否按住ctrl
+        altKey:true,//是否按住alt
+        shiftKey:false,//是否按住shift
+        keyCode:keyBoardKeyConfig['q']//其他键
     }
 }
 

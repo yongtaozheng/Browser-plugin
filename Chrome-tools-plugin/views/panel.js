@@ -59,6 +59,11 @@ panelDom.getElementsByClassName('splitBoard')[0].onclick = ()=>{
 //获取当前快捷键跳转地址
 searchInput.oninput = function(){
     let val = replaceSpace2One(searchInput.value.trim());
+    console.log('------',openPenalKeys,val,openPenalKeys[val]);
+    if(openPenalKeys[val] != undefined) {
+        searchTip.innerText = openPenalKeys[val];
+        return;
+    }
     let tip = '';
     let append = '本窗口打开:';
     if(val.length == 0) searchTip.innerText = searchConfig.baseUrl;
@@ -134,7 +139,7 @@ function initData() {
 function keyDown(){
 	panelDom.onkeydown = function(event){
 		if(event.keyCode==9){
-            for(let key in searchConfig){
+            for(let key in {...searchConfig,...openPenalKeys}){
                 if(key.length >= searchInput.value.length && searchInput.value == key.slice(0,searchInput.value.length)){
                     searchInput.value = key;
                     searchTip.innerText = '本窗口打开:' + searchConfig[key];
@@ -154,7 +159,10 @@ function keyDown(){
             }
         }else if(isOpenKey(event)){
             openPanel();
-		}
+		}else if(isTranslationOpenKey(event)){
+            openTranslationPanel();
+        }
+
 	});
 }
 function openPanel(){
@@ -168,10 +176,24 @@ function openPanel(){
         url2.value = location.href;
     }
     else panel.close();
-}
+};
+function openTranslationPanel(){
+    if(viewsList.translation.isHide) viewsList.translation.open();
+    else viewsList.translation.close();
+};
 //判断是否打开面板快捷键
 function isOpenKey(e){
     const openKey = shortcutsKeys.open;
+    for(let key in openKey){
+        if(e[key] != openKey[key]){
+            return false;
+        }
+    }
+    return true;
+}
+//判断是否打开翻译面板快捷键
+function isTranslationOpenKey(e){
+    const openKey = shortcutsKeys.translationOpen;
     for(let key in openKey){
         if(e[key] != openKey[key]){
             return false;

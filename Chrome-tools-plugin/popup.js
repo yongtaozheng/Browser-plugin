@@ -1,3 +1,10 @@
+/*
+ * @Author: zheng yong tao
+ * @Date: 2021-12-30 21:59:16
+ * @LastEditors: zheng yong tao
+ * @LastEditTime: 2022-01-09 00:17:05
+ * @Description: 
+ */
 $(function(){
     var state = $('#state');
     $('#change').click(function () {
@@ -28,3 +35,31 @@ $(function(){
         });
     })
 })
+/**
+ * 
+        ctrlKey:false,//是否按住ctrl
+        altKey:true,//是否按住alt
+        shiftKey:false,//是否按住shift
+        keyCode:keyBoardKeyConfig['v']//其他键
+ */
+let dom = document.getElementById('fastKeys');
+const getKeyByValue = function(val){
+    for(let key in keyBoardKeyConfig){
+        if(keyBoardKeyConfig[key] == val) return key;
+    }
+    return '';
+};
+const getKeys = function(obj){
+    let res = [];
+    console.log(obj);
+    if(obj.ctrlKey) res.push('ctrl');
+    if(obj.shiftKey) res.push('shift');
+    if(obj.altKey) res.push('alt');
+    res.push(getKeyByValue(obj.keyCode));
+    return res.join(' + ');
+};
+dom.innerHTML = `
+    <div style="text-align: center;">快捷键说明</div>
+    <div>${getKeys(shortcutsKeys.open)}：打开操作面板</div>
+    <div>${getKeys(shortcutsKeys.translationOpen)}：打开翻译面板</div>
+`;
