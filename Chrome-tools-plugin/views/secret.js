@@ -1,12 +1,12 @@
 let secretInnerHTML = `
     <div id="mainContent" class="wrapper" style="font-size: large;">
-        <div class="toolUsing clearfix">
+        <div class="toolUsing clearfix" style="display:flex;">
             <div class="leftBar">
                 <div class="title">明文:</div>
                 <textarea name="message" id="msg_source" value="" class="text_source"></textarea>
             </div>
 
-            <div class="operateLR" style="width:160px;margin: 100px 5px 0px;">
+            <div class="operateLR">
                 <div class="OptDetail">
                     <label>加密算法:</label>
                     <ul>
@@ -39,28 +39,30 @@ let secretPanelConfig = {
     top:'2vh',
     backgroundImg:'https://i.loli.net/2021/08/17/J8G3sZNvcEP25XA.gif',
 };
-var secretPanel = new Dialog(secretInnerHTML,secretPanelConfig);
-let secretPanelDom = document.getElementById(secretPanel.dialogId);
+
+let initSecretPanel = () => {
+    let secretPanelDom = document.getElementById(secretPanel.dialogId);
+    let encryptBtn = secretPanelDom.getElementsByClassName('encrypt-btn')[0];
+    let decryptBtn = secretPanelDom.getElementsByClassName('decrypt-btn')[0];
+    encryptBtn.onclick = ()=>{
+        encrypt();
+    };
+    decryptBtn.onclick = ()=>{
+        decrypt();
+    };
+};
+
+var secretPanel = new Dialog(secretInnerHTML,secretPanelConfig,initSecretPanel,2);
 viewsList["secret"] = secretPanel;
-
-let encryptBtn = secretPanelDom.getElementsByClassName('encrypt-btn')[0];
-let decryptBtn = secretPanelDom.getElementsByClassName('decrypt-btn')[0];
-
-encryptBtn.onclick = ()=>{
-    encrypt();
-};
-decryptBtn.onclick = ()=>{
-    decrypt();
-};
 
 //加密
 function encrypt() {
     var type = $('input[name="encrypt_type"]:checked').val();
     var funcsMap = {
-        'aes': value => JYeontuB64Coder.encodeAes(value),
-        'des': value => JYeontuB64Coder.encodeDes(value),
-        'base64': value => JYeontuB64Coder.encode(value),
-        'm2': value => JYeontuB64Coder.encodeM2(value),
+        'aes': value => MTB64Coder.encodeAes(value),
+        'des': value => MTB64Coder.encodeDes(value),
+        'base64': value => MTB64Coder.encode(value),
+        'm2': value => MTB64Coder.encodeM2(value),
         'url':value => encodeURI(value),
 
     };
@@ -82,10 +84,10 @@ function encrypt() {
 function decrypt() {
     var type = $('input[name="encrypt_type"]:checked').val();
     var funcsMap = {
-        'aes': value => JYeontuB64Coder.decodeAes(value),
-        'des': value => JYeontuB64Coder.decodeDes(value),
-        'base64': value => JYeontuB64Coder.decode(value),
-        'm2': value => JYeontuB64Coder.decodeM2(value),
+        'aes': value => MTB64Coder.decodeAes(value),
+        'des': value => MTB64Coder.decodeDes(value),
+        'base64': value => MTB64Coder.decode(value),
+        'm2': value => MTB64Coder.decodeM2(value),
         'url':value => decodeURI(value),
 
     };

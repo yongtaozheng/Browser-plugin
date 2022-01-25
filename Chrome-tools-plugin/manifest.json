@@ -16,7 +16,7 @@
     "content_scripts": [
         {
             "matches": ["<all_urls>"],
-			"css": ["css/mystyles.css","工具/base.css","工具/index.css"],
+			"css": ["css/mystyles.css","工具/index.css"],
             "js": ["else/jquery-3.6.0.min.js","工具/zepto.min.js",
                 "configs/keyBoardKeyConfig.js","configs/config.js",
                 "工具/crypto-js/crypto-js.js","工具/index.js",

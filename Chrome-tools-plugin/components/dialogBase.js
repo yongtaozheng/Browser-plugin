@@ -2,46 +2,65 @@
  * @Author: zheng yong tao
  * @Date: 2021-12-30 00:51:37
  * @LastEditors: zheng yong tao
- * @LastEditTime: 2022-01-08 23:43:23
+ * @LastEditTime: 2021-12-30 02:21:36
  * @Description: "弹窗组件类封装"
  */
 class Dialog {
-    constructor(innerHTML,config = {}){
+    /**
+     * 
+     * @param {String} innerHTML 内嵌页面html
+     * @param {Object} config  弹窗属性配置
+     * @param {Function} callBack 回调函数
+     * @param {Number} mode 内嵌模式 -> 1:页面初始化时就创建dom元素并插入页面 2：窗口打开是创建dom元素，关闭时销毁
+     */
+    constructor(innerHTML,config = {},callBack,mode = 1){
         this.config = config;
+        this.mode = mode;
+        this.callBack = callBack
+        this.innerHTML = innerHTML;
+        this.maskId = 'mask-mt';
         this.dialogInit();
+        this.generateMask();
         this.generatePreviewContent(innerHTML);
+        if(mode == 1){
+            this.append();
+        }
     }
     //初始化配置信息
     dialogInit(){
-        const mask = document.getElementsByClassName('mask');
         const dialog = document.getElementsByClassName('dialog');
-        let maskId = 'mask';
         let dialogId = 'dialog';
-        if(mask) maskId += "-" + mask.length;
         if(dialog) dialogId += "-" + dialog.length;
-        this.maskId = maskId;
         this.dialogId = dialogId;
         this.isHide = true;
     }
+    //创建遮罩
+    generateMask(){
+        let mask = document.createElement('div');
+        const maskT = document.getElementsByClassName('mask-mt');
+        if(maskT && maskT.length > 0) mask = maskT[0];
+        else{
+            mask.className = "mask-mt";
+            mask.id = this.maskId;
+            let maskStyles = {
+                position: "fixed",
+                height: '100vh',
+                width: '100vw',
+                backgroundColor: 'grey',
+                top: 0,
+                opacity:0.8,
+                zIndex:2147483646,
+                display:'none'
+            };
+            mask = tagConfingSet(mask,maskStyles);
+        }
+        this.mask = mask;
+    }
     //创建弹窗
     generatePreviewContent(innerHTML){
-        let ghtml = document.getElementsByTagName('html')[0],
-            mask = document.createElement('div'),
-            dialog = document.createElement('div');
-        mask.className = "mask";
+        let dialog = document.createElement('div');
         dialog.className = "dialog";
-        mask.id = this.maskId;
         dialog.id = this.dialogId;
-        let maskStyles = {
-            position: "fixed",
-            height: '100vh',
-            width: '100vw',
-            backgroundColor: 'grey',
-            top: 0,
-            opacity:0.9,
-            zIndex:2147483646,
-            display:'none'
-        };
         let dialogStyles = {
             position: "fixed",
             height: this.config.height || '70vh',
@@ -57,7 +76,6 @@ class Dialog {
             "background-repeat": 'no-repeat',
             opacity:0.7,
         }
-        mask = tagConfingSet(mask,maskStyles);
         dialog = tagConfingSet(dialog,dialogStyles);
         let icon = `
             <div style="height:16px%;font-size: 16px;">
@@ -70,23 +88,33 @@ class Dialog {
             </div>
         `;
         dialog.innerHTML = icon + innerHTML;
-        ghtml.appendChild(dialog);
-        ghtml.appendChild(mask);
         let closebtn = dialog.getElementsByClassName('dialogCloseBtn')[0];
         closebtn.onclick = ()=>{
             this.close();
         };
         this.dialog = dialog;
-        this.mask = mask;
+    }
+    //将节点插入页面html
+    append(){
+        let ghtml = document.getElementsByTagName('html')[0];
+        ghtml.appendChild(this.dialog);
+        ghtml.appendChild(this.mask);
     }
     open(){
         this.mask.style.display = 'block';
         this.dialog.style.display = 'flex';
         this.isHide = false;
+        if(this.mode == 2){
+            this.append();
+            this.callBack();
+        }
     }
     close(){
         this.dialog.style.display = 'none';
         this.mask.style.display = 'none';
         this.isHide = true;
+        if(this.mode == 2){
+            this.dialog.remove();
+        }
     }
 }

@@ -4,6 +4,8 @@ let translationInnerHtml = `
     <div>
     `;
 
-var translation = new Dialog(translationInnerHtml,{width:'80vw',height:"80vh",left:'10vw',top:'10vh'});
-let translationDom = document.getElementById(translation.dialogId);
+let initTranslation = () => {
+    let translationDom = document.getElementById(translation.dialogId);
+}
+var translation = new Dialog(translationInnerHtml,{width:'80vw',height:"80vh",left:'10vw',top:'10vh'},initTranslation,2);
 viewsList["translation"] = translation;
