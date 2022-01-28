@@ -5,7 +5,7 @@ let innerHtml = `
     <div style="height:100%;padding: 16px 32px 16px 32px;font-size: 16px;">
         <input ${panelConfig.autocomplete ? 'autocomplete="off"' : '' } placeholder="按tab键可自动补全，输入关键字按回车" id="dialogSearchInput" class="dialogSearchInput" style="width:100%;line-height:48px;height:48px;"/>
         <div class="searchTip" style="word-break:break-all;width:100%;color:red;text-align:center;"></div>
-        <div style="display:flex;margin-top:16px;">
+        <div style="display:flex;margin-top:16px;" id="filter-project">
             <div style='${this.setStyle('','flex:4;display:flex;')}'>
                 <span style="${this.setStyle('label','width:30%;')}">项目关键字</span>
                 <input title="项目过滤" class="filterName" style='${this.setStyle('input','width:80%;')}' placeholder="保存默认过滤字段"/>
@@ -20,6 +20,14 @@ let innerHtml = `
             </div>
             <span class="splitBoard" style='${this.setStyle('btn','flex:1;')}'>分屏</span>
         </div>
+        <div style="display:flex;margin-top:16px;">
+            <div style='${this.setStyle('','flex:4;display:flex;')}'>
+                <input type="color" title="颜色" value="#ffffff" class="colorShow" style='${this.setStyle('input','width:45%;')}'/>
+                <input type="text" title="颜色" value="#ffffff" class="colorText" style='${this.setStyle('input','margin-left:5%;width:45%;')}'/>
+            </div>
+            <span class="colorGet" style='${this.setStyle('btn','flex:1;')}'>颜色拾取</span>
+        </div>
+
     </div>
     <div style="background-color: deepskyblue;display: flex;height:32px;font-size: 16px;">
         <div class="dialogDeleteBtn" title="取消" style="flex:1;text-align: center;cursor: pointer;line-height: 32px;border-right: 1px solid;">取消</div>
@@ -39,6 +47,13 @@ panelDom.getElementsByClassName('dialogDeleteBtn')[0].onclick = ()=>{
 };
 panelDom.getElementsByClassName('dialogSetBtn')[0].onclick = ()=>{
     panel.close();
+};
+panelDom.getElementsByClassName('colorGet')[0].onclick = ()=>{
+    const eyeDropper = new EyeDropper();
+    const result = eyeDropper.open().then(res => {
+        panelDom.getElementsByClassName('colorShow')[0].value = res.sRGBHex;
+        panelDom.getElementsByClassName('colorText')[0].value = res.sRGBHex;
+    });
 };
 panelDom.getElementsByClassName('filterNameSaveBtn')[0].onclick = ()=>{
     const filterName = panelDom.getElementsByClassName('filterName')[0].value;
@@ -112,7 +127,7 @@ var database = new DataBase(dbConfig);
 
 //是否在gitlab中
 if(window.location.href == searchConfig.baseUrl){
-    var inGitLab = true;
+    document.getElementById('filter-project').style.display = 'flex';
     var originDomList = document.getElementsByClassName('projects-list')[0].innerHTML;
     let dbOpen = database.openDB(dbConfig.dbName,dbConfig.tableName);
     dbOpen.then(res => {
@@ -121,6 +136,8 @@ if(window.location.href == searchConfig.baseUrl){
     }).catch(err => {
         console.log('err',err);
     })
+}else{
+    document.getElementById('filter-project').style.display = 'none';
 }
 keyDown();
 
