@@ -50,9 +50,13 @@ panelDom.getElementsByClassName('dialogSetBtn')[0].onclick = ()=>{
 };
 panelDom.getElementsByClassName('colorGet')[0].onclick = ()=>{
     const eyeDropper = new EyeDropper();
+    panel.close();
     const result = eyeDropper.open().then(res => {
+        panel.open();
         panelDom.getElementsByClassName('colorShow')[0].value = res.sRGBHex;
         panelDom.getElementsByClassName('colorText')[0].value = res.sRGBHex;
+    }).catch(err=>{
+        panel.open();
     });
 };
 panelDom.getElementsByClassName('filterNameSaveBtn')[0].onclick = ()=>{
