@@ -1,0 +1,24 @@
+{
+  "manifest_version": 2, //版本号，由google指定为2
+  "name": "helloWorld", //插件名称
+  "version": "1.0", //插件版本
+  "description": "hello world 插件", //插件描述
+  "icons": {
+    //插件图标
+    "128": "img/logo.jpg",
+    "48": "img/logo.jpg",
+    "16": "img/logo.jpg"
+  },
+  "browser_action": {
+    "default_icon": "img/logo.jpg", //插件图标
+    "default_popup": "demo/dist/index.html" //点击图标后弹出的html互动文件
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"], //匹配url
+      "js": ["bg.js"], //执行脚本
+      "run_at": "document_start" //脚本运行时机
+    }
+  ],
+  "permissions": ["tabs", "activeTab"] //权限申请
+}
