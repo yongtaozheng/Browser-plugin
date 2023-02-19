@@ -16,7 +16,6 @@ var searchConfig = {
     leetcode:'https://leetcode-cn.com/problemset/all/',
     yuque:'https://www.yuque.com/dashboard',
     csdn:"https://blog.csdn.net/Twinkle_sone?spm=1001.2100.3001.5343",
-    jindu:"https://docs.qq.com/sheet/DRURld0tud3p5SnpH?tab=cq2xur&groupUin=LrppjvIiADVhgcqHcf7pGQ%25253D%25253D&ADUIN=1311395125&ADSESSION=1633741591&ADTAG=CLIENT.QQ.5833_.0&ADPUBNO=27165",
 }
 
 //快速打开面板关键字，无需更改
