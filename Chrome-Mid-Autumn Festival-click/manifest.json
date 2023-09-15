@@ -1,0 +1,24 @@
+{
+  "manifest_version": 2,
+  "name": "中秋点击效果",
+  "version": "1.0",
+  "description": "祝大家中秋节快乐 ——JYeontu",
+  "icons": {
+    "128": "img/moon.png",
+    "48": "img/moon.png",
+    "16": "img/moon.png"
+  },
+  "browser_action": {
+    "default_icon": "img/moon.png",
+    "default_popup": "index.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["bg.js"],
+      "run_at": "document_end",
+      "css": ["index.css"]
+    }
+  ],
+  "permissions": ["tabs", "activeTab"]
+}
