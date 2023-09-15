@@ -1,0 +1,11 @@
+{
+  "name": "@jyeontu/chrome-plug-template",
+  "version": "1.0.1",
+  "description": "Chrome插件模板",
+  "main": "bg.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
