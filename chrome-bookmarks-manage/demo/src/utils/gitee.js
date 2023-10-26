@@ -23,7 +23,7 @@ async function putFileContent(apiUrl, accessToken, encodedContent, sha) {
   const commitData = {
     access_token: accessToken,
     content: encodedContent,
-    message: "Modified file",
+    message: "书签更新",
     sha: sha,
   };
 
@@ -37,9 +37,9 @@ async function putFileContent(apiUrl, accessToken, encodedContent, sha) {
   });
 
   if (putResponse.ok) {
-    alert("File modified successfully.");
+    alert("已上传书签数据");
   } else {
-    alert("Failed to modify file.");
+    alert("上传书签数据失败");
   }
 }
 
