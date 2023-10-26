@@ -1,0 +1,19 @@
+{
+  "name": "chrome-bookmarks-manage",
+  "version": "1.0.0",
+  "description": "chrome书签同步插件",
+  "main": "bg.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitee.com/zheng_yongtao/chrome-plug-in/tree/master/Chrome%E6%8F%92%E4%BB%B6%E6%A8%A1%E6%9D%BF"
+  },
+  "keywords": [
+    "chrome插件",
+    "书签"
+  ],
+  "author": "JYeontu",
+  "license": "ISC"
+}

@@ -13,7 +13,6 @@ Chrome-tools-plugin/configs/config.js
 .Python
 build/
 develop-eggs/
-dist/
 downloads/
 eggs/
 .eggs/
@@ -117,3 +116,4 @@ dmypy.json
 # Pyre type checker
 .pyre/
 package-lock.json
+node_modules/
