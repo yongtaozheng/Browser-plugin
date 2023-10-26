@@ -109,6 +109,8 @@ export default {
         console.error("Failed to create or open database:", error);
       });
   },
+  mounted(){
+  },
   methods: {
     dataChange() {
       this.indexedDB.update("data", this.gitInfo);

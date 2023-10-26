@@ -8,6 +8,12 @@ export const sendMessage = (params) => {
   });
 };
 
+export const bookmarksListener = (cb) => {
+  chrome.bookmarks.onTreeChanged.addListener(function (a) {
+    cb(a);
+  });
+};
+
 export const getBookmarks = () => {
   return new Promise((resolve) => {
     chrome.bookmarks.getTree(function (bookmarkTreeNodes) {
