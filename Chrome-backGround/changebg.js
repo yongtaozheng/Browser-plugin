@@ -292,7 +292,7 @@ function generateImgContent() {
     height: "100%",
     top: "0px",
     left: "0px",
-    opacity: "0.5",
+    opacity: "0.3",
     zIndex: "-1",
   };
   ghtml.appendChild(tagConfingSet(gdiv, config));

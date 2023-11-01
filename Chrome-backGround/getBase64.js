@@ -96,13 +96,13 @@ const splitImgData = function(img){
 //与浏览器端通信，保存图片列表一致
 function send(doDelete){
     chrome.tabs.query({active:true, currentWindow:true}, function (tab) {
-        let localList = localListData;
+        let localList = localListData || [];
         chrome.tabs.sendMessage(tab[0].id, {  
             action: "sendData",
             doDelete:doDelete,
             data:JSON.stringify(localList)
-        }, function (response) {
-            if(localListData.length < JSON.parse(response.state||'').length){
+        }, function (response = {}) {
+            if(localListData.length < JSON.parse(response.state||'[]').length){
                 localListData = JSON.parse(response.state);
                 dbUpdate(localListData)
             }
