@@ -2,10 +2,9 @@
 $(function(){
     //监听图片上传
     document.getElementById("ImgFile").onchange = function () {
-        var file = this.files[0];
-        r = new FileReader();  //本地预览
+        const file = this.files[0];
+        const r = new FileReader();  //本地预览
         r.onload = function(){
-            // let img = splitImgData(r.result);
             let img = r.result;
             saveImg(img);
         }
@@ -19,8 +18,8 @@ $(function(){
             alert("请先选择图片");
             return;
         }else{
-            for(let i = 0; i < localList.length; i++){
-                if(localList[i] == img){
+            for(const src of localList){
+                if(src == img){
                     alert("请不要上传重复照片！");
                     return;
                 }
@@ -70,25 +69,14 @@ dbOpen.then(res => {
 //保存图片
 function saveImg(img){
     let localList = localListData;
-    for(let i = 0; i < localList.length; i++){
-        let src = localList[i];
+    for(const src of localList){
         if(src == img){
             alert("请不要上传重复照片！");
-            // clearInput();
             return;
         }
     }
     localList.push(img);
-    // clearInput();
     dbUpdate(localList,img);
-};
-function clearInput(){
-    const file =  document.getElementById("ImgFile");
-    if (file.outerHTML) {
-        file.outerHTML = file.outerHTML;
-    } else { // FF(包括3.5)
-        file.value = "";
-    }
 };
 //base64分片
 const splitImgData = function(img){
@@ -108,7 +96,6 @@ const splitImgData = function(img){
 //与浏览器端通信，保存图片列表一致
 function send(doDelete){
     chrome.tabs.query({active:true, currentWindow:true}, function (tab) {
-        var state = $('#state');
         let localList = localListData;
         chrome.tabs.sendMessage(tab[0].id, {  
             action: "sendData",
@@ -119,7 +106,6 @@ function send(doDelete){
                 localListData = JSON.parse(response.state);
                 dbUpdate(localListData)
             }
-            // state.html(response.state)
         });
     })
 };
@@ -127,16 +113,11 @@ function showImg(){
     let ind = parseInt(this.getAttribute('data-ind'));
     showInd = ind;
     chrome.tabs.query({active:true, currentWindow:true}, function (tab) {
-        var state = $('#state');
         let localList = localListData;
         chrome.tabs.sendMessage(tab[0].id, {  
             action: "showImg",
             data:localList[ind]
         }, function (response) {
-            // if(response.state){
-            //     deleteImg(ind);
-            // }
-            // state.html(response.state)
         });
     })
 };
@@ -148,7 +129,6 @@ chrome.runtime.onMessage.addListener(
         if(request.action == "delete"){
             deleteImg(showInd);
         }
-        // send();
     });
 //初始化页面
 function init(img = ''){
@@ -183,14 +163,15 @@ function init(img = ''){
 };
 function setShowImg(ind){
     chrome.tabs.query({active:true, currentWindow:true}, function (tab) {
-        var state = $('#state');
         let localList = localListData;
         chrome.tabs.sendMessage(tab[0].id, {  
             action: "setShowImg",
             data:localList[ind]
         }, function (response) {
-            // state.html(response.state)
         });
+        chrome.storage.local.set({ bgImgDbImg: localList[ind] }, function() {
+            console.log('Data saved');
+          });
     })
 };
 //删除图片

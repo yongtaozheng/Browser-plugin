@@ -1,18 +1,17 @@
-var showind = 0;
-var gmove = false;
-var startX;
-var startY;
-var endX;
-var endY;
-var _gx, _gy;
-var windowWidth = window.innerWidth;
-var isHide = false;
-var localListData;
-var localJData = {
+let showind = 0;
+let gmove = false;
+let startX;
+let startY;
+let endX;
+let endY;
+let _gx, _gy;
+let windowWidth = window.innerWidth;
+let isHide = false;
+let localListData;
+let localJData = {
   localListData: [],
   isHide: false,
 };
-var showImgSrc = "https://images8.alphacoders.com/992/992329.jpg";
 const config = {
   colors: ["#482936", "#461629", "#35333c", "#11659a"],
 };
@@ -40,7 +39,7 @@ function myConsole(str) {
 function openDB(dbName, storeName, version = 1) {
   return new Promise((resolve, reject) => {
     //  兼容浏览器
-    var indexedDB =
+    let indexedDB =
       window.indexedDB ||
       window.mozIndexedDB ||
       window.webkitIndexedDB ||
@@ -58,24 +57,6 @@ function openDB(dbName, storeName, version = 1) {
     request.onerror = function (event) {
       myConsole("数据库打开报错");
     };
-    // 数据库有更新时候的回调
-    request.onupgradeneeded = function (event) {
-      // 数据库创建或升级的时候会触发
-      myConsole("onupgradeneeded");
-      db = event.target.result; // 数据库对象
-      var objectStore;
-      // 创建存储库
-      objectStore = db.createObjectStore(storeName, {
-        keyPath: "id", // 这是主键
-        // autoIncrement: true // 实现自增
-      });
-      // 创建索引，在后面查询数据的时候可以根据索引查
-      objectStore.createIndex("link", "link", { unique: false });
-      objectStore.createIndex("sequenceId", "sequenceId", { unique: false });
-      objectStore.createIndex("messageType", "messageType", {
-        unique: false,
-      });
-    };
   });
 }
 /**
@@ -85,7 +66,7 @@ function openDB(dbName, storeName, version = 1) {
  * @param {string} data 数据
  */
 function addData(db, storeName, data) {
-  var request = db
+  let request = db
     .transaction([storeName], "readwrite") // 事务对象 指定表格名称和操作模式（"只读"或"读写"）
     .objectStore(storeName) // 仓库对象
     .add(data);
@@ -106,16 +87,15 @@ function addData(db, storeName, data) {
  */
 function getDataByKey(db, storeName, key) {
   return new Promise((resolve, reject) => {
-    var transaction = db.transaction([storeName]); // 事务
-    var objectStore = transaction.objectStore(storeName); // 仓库对象
-    var request = objectStore.get(key); // 通过主键获取数据
+    let transaction = db.transaction([storeName]); // 事务
+    let objectStore = transaction.objectStore(storeName); // 仓库对象
+    let request = objectStore.get(key); // 通过主键获取数据
 
     request.onerror = function (event) {
       myConsole("事务失败");
     };
 
     request.onsuccess = function (event) {
-      // console.log("主键查询结果: ", request.result);
       resolve(request.result);
     };
   });
@@ -127,22 +107,20 @@ function getDataByKey(db, storeName, key) {
  * @param {object} data 数据
  */
 function updateDB(db, storeName, data) {
-  var request = db
+  let request = db
     .transaction([storeName], "readwrite") // 事务对象
     .objectStore(storeName) // 仓库对象
     .put(data);
 
   request.onsuccess = function () {
-    //   console.log("数据更新成功");
   };
 
   request.onerror = function () {
-    //   console.log("数据更新失败");
   };
 }
 
-var db;
-var dbName = "bgImgDb",
+let db;
+let dbName = "bgImgDb",
   tableName = "bgImgList";
 let dbOpen = openDB(dbName, tableName);
 
@@ -154,7 +132,7 @@ function dbGet(key = "localList") {
         localListData = [];
       } else {
         localListData = res.data;
-        changebg(1);
+        localJData.localListData = res.data;
       }
     })
     .catch((err) => {
@@ -162,9 +140,19 @@ function dbGet(key = "localList") {
     });
 }
 function dbUpdate(data, img = "") {
+  const obj = {
+    id: "localList",
+  };
+  if(data){
+    obj.data = data;
+  }
+  if(img){
+    obj.img = img;
+  }
   updateDB(db, tableName, {
     id: "localList",
     data: data,
+    img:img
   });
   localListData = data;
 }
@@ -192,11 +180,8 @@ function initDb() {
 //发送请求
 function sendToBackground(action) {
   chrome.runtime.sendMessage({ action: action }, function (response) {
-    // console.log(response);
   });
 }
-// initDb();
-//接受页面请求
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   const action = request.action;
   switch (action) {
@@ -242,13 +227,10 @@ function randomNum(min, max) {
   switch (arguments.length) {
     case 1:
       return Math.floor(Math.random() * minNum + 1);
-      break;
     case 2:
       return Math.floor(Math.random() * (max - min + 1) + min);
-      break;
     default:
       return 0;
-      break;
   }
 }
 //顺序切换图片
@@ -263,16 +245,14 @@ function changebg(ind, imgSrc = "") {
     gdiv = document.getElementById("changdiv"),
     gbody = document.getElementsByTagName("body")[0],
     gbtn = document.getElementById("gbtn");
-  // if(bgimg.length == 0) ind = 3;
-  //   gbody.style.opacity = "0.8";
   isHide = false;
   gbtn.style.display = "block";
   gbody.style.mixBlendMode = "multiply";
-  //   gbody.style.filter = "brightness(100%) invert(100%) sepia(100%)";
   if (imgSrc !== "") {
     gdiv.style.backgroundImage = "url(" + imgSrc + ")";
     gdiv.style.backgroundRepeat = "no-repeat";
     gdiv.style.backgroundSize = "cover";
+    dbUpdate(localListData,imgSrc);
   } else if (ind == 1) {
     //随机切换图片
     let num = randomNum(0, bgimg.length - 1);
@@ -303,8 +283,6 @@ function changebg(ind, imgSrc = "") {
 }
 //生成一个div作为图片容器
 function generateImgContent() {
-  let gbody = document.getElementsByTagName("body")[0];
-  //   gbody.style.opacity = "0.8";
   let ghtml = document.getElementsByTagName("html")[0],
     gdiv = document.createElement("div");
   gdiv.id = "changdiv";
@@ -368,8 +346,8 @@ function generateBtn() {
   $(document)
     .mousemove(function (e) {
       if (gmove) {
-        var x = e.pageX - _gx; //控件左上角到屏幕左上角的相对位置
-        var y = e.pageY - _gy;
+        let x = e.pageX - _gx; //控件左上角到屏幕左上角的相对位置
+        let y = e.pageY - _gy;
         $("#gbtn").css({ top: y, left: x });
       }
     })
@@ -381,10 +359,8 @@ function generateBtn() {
       );
       if (d === 0 || d < 7) {
         changebg(4);
-      } else {
-        if (windowWidth - endX < 60) {
+      } else if (windowWidth - endX < 60) {
           $("#gbtn").css({ left: windowWidth - 20 });
-        }
       }
       gmove = false;
     });
@@ -400,6 +376,10 @@ function tagConfingSet(el, config) {
 function init() {
   generateImgContent();
   generateBtn();
+  chrome.storage.local.get('bgImgDbImg', function(res) {
+    const img = res.bgImgDbImg || '';
+    changebg(1,img);
+  });
 }
 function keyDown() {
   //ctrlKey（metaKey）、altKey、shiftKey
@@ -412,14 +392,8 @@ function keyDown() {
         changebg(3);
       }
     }
-    //alt + x 切换图片(可能会被截屏占用快捷键)
-    else if (event.altKey && event.keyCode == 88) {
-      if (!isHide) {
-        changebg(4);
-      }
-    }
-    //alt + w 切换图片
-    else if (event.altKey && event.keyCode == 87) {
+    //alt + x/w 切换图片(可能会被截屏占用快捷键)
+    else if (event.altKey && [87,88].includes(event.keyCode)) {
       if (!isHide) {
         changebg(4);
       }
@@ -434,7 +408,7 @@ function keyDown() {
 }
 
 init();
-changebg(1);
+changebg(1,localJData.img);
 keyDown();
 
 function getImgList() {
