@@ -248,6 +248,7 @@ function changebg(ind, imgSrc = "") {
   isHide = false;
   gbtn.style.display = "block";
   gbody.style.mixBlendMode = "multiply";
+  gbody.style.background = '#fff';
   if (imgSrc !== "") {
     gdiv.style.backgroundImage = "url(" + imgSrc + ")";
     gdiv.style.backgroundRepeat = "no-repeat";
@@ -272,6 +273,8 @@ function changebg(ind, imgSrc = "") {
     gdiv.style.backgroundColor = "";
     gbtn.style.display = "none";
     isHide = true;
+    gbody.style.mixBlendMode = "unset";
+    gbody.stylebackground = '';
   } else if (ind == 4) {
     //顺序切换背景图片
     let num = byorder(bgimg.length);
