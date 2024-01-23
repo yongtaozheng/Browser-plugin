@@ -1,0 +1,58 @@
+{
+  "manifest_version": 3,
+  "name": "Chrome-blogTemplate",
+  "version": "1.0.0",
+  "description": "博客模板插件",
+  "icons": {
+    "16": "img/logo.png",
+    "48": "img/logo.png",
+    "128": "img/logo.png"
+  },
+  "action": {
+    "default_title": "Chrome-blogTemplate",
+    "default_icon": "img/logo.png",
+    "default_popup": "popup/dist/index.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "exclude_matches": [
+        "*://*/*.png",
+        "*://*/*.jpg",
+        "*://*/*.jpeg",
+        "*://*/*.gif",
+        "http://*:9999/*",
+        "http://*:8080/*",
+        "http://*:8081/*"
+      ],
+      "js": [
+        "bg.js",
+        "contentScript.js"
+      ],
+      "run_at": "document_end",
+      "css": [
+        "myStyle.css",
+        "panel/dist/css/panel.css"
+      ]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "panel/dist/js/app.68428e48.js",
+        "panel/dist/js/chunk-vendors.57d7c63b.js",
+        "script/test.js"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ],
+  "permissions": [
+    "tabs",
+    "activeTab",
+    "storage"
+  ]
+}

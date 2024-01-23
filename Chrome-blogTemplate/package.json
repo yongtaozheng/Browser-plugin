@@ -1,0 +1,26 @@
+{
+  "name": "vue-chrome-extension-quickstart",
+  "version": "1.0.0",
+  "description": "vue快速开发chrome浏览器插件模板",
+  "main": "build.js",
+  "scripts": {
+    "build": "node build.js",
+    "init": "node init.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitee.com/zheng_yongtao/vue-chrome-extension-quickstart"
+  },
+  "keywords": [
+    "chrome插件",
+    "vue",
+    "模板"
+  ],
+  "author": "JYeontu",
+  "license": "ISC",
+  "dependencies": {
+    "@jyeontu/j-inquirer": "^1.0.5",
+    "child_process": "^1.0.2",
+    "fs-extra": "^11.2.0"
+  }
+}
