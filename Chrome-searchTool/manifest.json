@@ -1,0 +1,50 @@
+{
+  "manifest_version": 3,
+  "name": "searchTool",
+  "version": "1.0.0",
+  "description": "页面搜索工具",
+  "icons": {
+    "16": "img/logo.png",
+    "48": "img/logo.png",
+    "128": "img/logo.png"
+  },
+  "action": {
+    "default_title": "searchTool",
+    "default_icon": "img/logo.png",
+    "default_popup": "popup/dist/index.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "bg.js",
+        "contentScript.js"
+      ],
+      "run_at": "document_end",
+      "css": [
+        "myStyle.css",
+        "panel/dist/css/panel.css"
+      ]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "panel/dist/js/app.c1037926.js",
+        "panel/dist/js/chunk-vendors.5a491341.js",
+        "script/init.js"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ],
+  "permissions": [
+    "tabs",
+    "activeTab",
+    "storage",
+    "declarativeContent"
+  ]
+}
