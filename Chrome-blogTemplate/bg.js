@@ -5,21 +5,21 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 });
 
 function appendDiv() {
-  const chromePlugPanelApp = document.createElement("div");
-  chromePlugPanelApp.id = "chromePlugPanelApp";
-  document.body.appendChild(chromePlugPanelApp);
+  const blogTemplateApp = document.createElement("div");
+  blogTemplateApp.id = "blogTemplateApp";
+  document.body.appendChild(blogTemplateApp);
   console.log("插件面板已插入");
   fastKeyListen();
 }
 function fastKeyListen() {
   const keydownFn = (event) => {
     if (event.altKey && event.key === "v") {
-      const chromePlugPanel = document.getElementById("chromePlugPanelApp");
+      const chromePlugPanel = document.getElementById("blogTemplateApp");
       chromePlugPanel.style.display =
         chromePlugPanel.style.display === "none" ? "block" : "none";
     }
   };
-  const chromePlugPanel = document.getElementById("chromePlugPanelApp");
+  const chromePlugPanel = document.getElementById("blogTemplateApp");
   document.addEventListener("keydown", keydownFn);
   chromePlugPanel.addEventListener("keydown", keydownFn);
 }

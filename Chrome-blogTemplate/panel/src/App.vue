@@ -1,12 +1,12 @@
 <template>
-  <div id="chromePlugPanelApp" v-show="showPanel">
-    <div id="chromePlugPanelMask" @click="closePanel()"></div>
-    <div id="chromePlugPanel">
-      <span id="chromePlugPanelClose" @click="closePanel()">×</span>
+  <div id="blogTemplateApp" v-show="showPanel">
+    <div id="blogTemplateAppMask" @click="closePanel()"></div>
+    <div id="blogTemplateApp">
+      <span id="blogTemplateAppClose" @click="closePanel()">×</span>
       <tabBar
         :tabList="tabList"
         v-model="activeTab"
-        id="chromePlugPanelTabBar"
+        id="blogTemplateAppTabBar"
       ></tabBar>
       <div style="width: 100%; flex: 1; overflow: scroll">
         <iframe
@@ -32,7 +32,7 @@
 import tabBar from "./components/common/tabBar.vue";
 import blogTemplate from "./components/blogTemplate.vue";
 export default {
-  name: "chromePlugPanelApp",
+  name: "blogTemplateApp",
   components: {
     tabBar,
     blogTemplate,
@@ -62,12 +62,12 @@ export default {
         this.showPanel = !this.showPanel;
       }
     };
-    const chromePlugPanel = document.getElementById("chromePlugPanel");
-    const chromePlugPanelMask = document.getElementById("chromePlugPanelMask");
+    const blogTemplateApp = document.getElementById("blogTemplateApp");
+    const blogTemplateAppMask = document.getElementById("blogTemplateAppMask");
     document.addEventListener("keydown", keydownFn);
-    chromePlugPanel && chromePlugPanel.addEventListener("keydown", keydownFn);
-    chromePlugPanelMask &&
-      chromePlugPanelMask.addEventListener("keydown", keydownFn);
+    blogTemplateApp && blogTemplateApp.addEventListener("keydown", keydownFn);
+    blogTemplateAppMask &&
+      blogTemplateAppMask.addEventListener("keydown", keydownFn);
   },
   methods: {
     closePanel() {
@@ -78,7 +78,7 @@ export default {
 </script>
 
 <style scoped>
-#chromePlugPanelMask {
+#blogTemplateAppMask {
   position: fixed;
   background: #b6bdc4;
   opacity: 0.2;
@@ -87,7 +87,7 @@ export default {
   top: 0;
   left: 0;
 }
-#chromePlugPanel {
+#blogTemplateApp {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -107,7 +107,7 @@ export default {
 .logo {
   width: 200px;
 }
-#chromePlugPanelClose {
+#blogTemplateAppClose {
   position: absolute;
   right: 0;
   font-size: xx-large;
@@ -115,10 +115,10 @@ export default {
   top: 0;
   padding: 0 0.5em;
 }
-#chromePlugPanelClose:hover {
+#blogTemplateAppClose:hover {
   background: red;
 }
-#chromePlugPanelTabBar {
+#blogTemplateAppTabBar {
   padding-right: 4em;
 }
 </style>

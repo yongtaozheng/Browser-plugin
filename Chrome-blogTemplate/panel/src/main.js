@@ -6,4 +6,4 @@ Vue.config.productionTip = false;
 window.axios = Http;
 new Vue({
   render: (h) => h(App),
-}).$mount("#chromePlugPanelApp");
+}).$mount("#blogTemplateApp");
