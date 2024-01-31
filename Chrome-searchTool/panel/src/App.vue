@@ -87,17 +87,15 @@ export default {
       this.dragData.isDragging = false;
     },
     keydownFnListening(dom = window) {
-      dom.onkeydown =
-        dom.onkeyup =
-        dom.onkeypress =
-          function (e) {
-            if (e.ctrlKey && e.key === "f") {
-              e.preventDefault();
-              // this.ctrlFAction();
-              if (dom.e && dom.e.returnValue) dom.e.returnValue = false;
-              return false;
-            }
-          };
+      dom.addEventListener("keydown", function (e) {
+        if (e.ctrlKey && e.key === "f") {
+          e.preventDefault();
+          // 执行自定义操作
+          // this.ctrlFAction();
+          if (dom.e && dom.e.returnValue) dom.e.returnValue = false;
+          return false;
+        }
+      });
     },
     ctrlFAction(query = "") {
       this.showPanel = true;
