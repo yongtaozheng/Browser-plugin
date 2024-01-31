@@ -1,7 +1,7 @@
 <template>
   <div id="blogTemplateApp" v-show="showPanel">
     <div id="blogTemplateAppMask" @click="closePanel()"></div>
-    <div id="blogTemplateApp">
+    <div id="blogTemplateAppPanel">
       <span id="blogTemplateAppClose" @click="closePanel()">×</span>
       <tabBar
         :tabList="tabList"
@@ -87,7 +87,7 @@ export default {
   top: 0;
   left: 0;
 }
-#blogTemplateApp {
+#blogTemplateAppPanel {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

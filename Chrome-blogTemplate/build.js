@@ -173,16 +173,18 @@ async function editContentScript() {
     })
   );
   const text = `
-const scriptUrlList = [${scriptUrlList}];
-scriptUrlList.forEach(url=>{
-    const s = document.createElement('script');
-    s.src = chrome.runtime.getURL(url);
-    s.setAttribute('type', 'text/javascript');
-    s.onload = function() {
-        this.remove();
-    };
-    (document.head || document.documentElement).appendChild(s);
-})`;
+(function () {
+  const scriptUrlList = [${scriptUrlList}];
+  scriptUrlList.forEach(url=>{
+      const s = document.createElement('script');
+      s.src = chrome.runtime.getURL(url);
+      s.setAttribute('type', 'text/javascript');
+      s.onload = function() {
+          this.remove();
+      };
+      (document.head || document.documentElement).appendChild(s);
+  })
+})()`;
   fs.writeFileSync("contentScript.js", text, "utf-8");
 }
 async function createDist() {
