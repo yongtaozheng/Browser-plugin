@@ -54,6 +54,7 @@ export function importBookmarks(bookmarkTreeNodes) {
 
   // 从根节点开始遍历书签树
   traverseBookmarks(bookmarkTreeNodes[0].children, "1");
+  alert("已同步书签数据");
 }
 export function removeBookmarks(bookmarkTreeNodes) {
   // 遍历书签树，删除所有的书签
