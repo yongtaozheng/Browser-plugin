@@ -87,17 +87,22 @@ function addData(db, storeName, data) {
  */
 function getDataByKey(db, storeName, key) {
   return new Promise((resolve, reject) => {
-    let transaction = db.transaction([storeName]); // 事务
-    let objectStore = transaction.objectStore(storeName); // 仓库对象
-    let request = objectStore.get(key); // 通过主键获取数据
+    try {
+      let transaction = db.transaction([storeName]); // 事务
+      let objectStore = transaction.objectStore(storeName); // 仓库对象
+      let request = objectStore.get(key); // 通过主键获取数据
 
-    request.onerror = function (event) {
-      myConsole("事务失败");
-    };
+      request.onerror = function (event) {
+        myConsole("事务失败");
+        reject(event);
+      };
 
-    request.onsuccess = function (event) {
-      resolve(request.result);
-    };
+      request.onsuccess = function (event) {
+        resolve(request.result);
+      };
+    } catch (err) {
+      reject(err);
+    }
   });
 }
 /**
@@ -107,16 +112,16 @@ function getDataByKey(db, storeName, key) {
  * @param {object} data 数据
  */
 function updateDB(db, storeName, data) {
-  let request = db
-    .transaction([storeName], "readwrite") // 事务对象
-    .objectStore(storeName) // 仓库对象
-    .put(data);
+  try {
+    let request = db
+      .transaction([storeName], "readwrite") // 事务对象
+      .objectStore(storeName) // 仓库对象
+      .put(data);
 
-  request.onsuccess = function () {
-  };
+    request.onsuccess = function () {};
 
-  request.onerror = function () {
-  };
+    request.onerror = function () {};
+  } catch (err) {}
 }
 
 let db;
@@ -143,16 +148,16 @@ function dbUpdate(data, img = "") {
   const obj = {
     id: "localList",
   };
-  if(data){
+  if (data) {
     obj.data = data;
   }
-  if(img){
+  if (img) {
     obj.img = img;
   }
   updateDB(db, tableName, {
     id: "localList",
     data: data,
-    img:img
+    img: img,
   });
   localListData = data;
 }
@@ -179,8 +184,7 @@ function initDb() {
 }
 //发送请求
 function sendToBackground(action) {
-  chrome.runtime.sendMessage({ action: action }, function (response) {
-  });
+  chrome.runtime.sendMessage({ action: action }, function (response) {});
 }
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   const action = request.action;
@@ -248,12 +252,12 @@ function changebg(ind, imgSrc = "") {
   isHide = false;
   gbtn.style.display = "block";
   gbody.style.mixBlendMode = "multiply";
-  gbody.style.background = '#fff';
+  gbody.style.background = "#fff";
   if (imgSrc !== "") {
     gdiv.style.backgroundImage = "url(" + imgSrc + ")";
     gdiv.style.backgroundRepeat = "no-repeat";
     gdiv.style.backgroundSize = "cover";
-    dbUpdate(localListData,imgSrc);
+    dbUpdate(localListData, imgSrc);
   } else if (ind == 1) {
     //随机切换图片
     let num = randomNum(0, bgimg.length - 1);
@@ -274,7 +278,7 @@ function changebg(ind, imgSrc = "") {
     gbtn.style.display = "none";
     isHide = true;
     gbody.style.mixBlendMode = "unset";
-    gbody.stylebackground = '';
+    gbody.stylebackground = "";
   } else if (ind == 4) {
     //顺序切换背景图片
     let num = byorder(bgimg.length);
@@ -363,7 +367,7 @@ function generateBtn() {
       if (d === 0 || d < 7) {
         changebg(4);
       } else if (windowWidth - endX < 60) {
-          $("#gbtn").css({ left: windowWidth - 20 });
+        $("#gbtn").css({ left: windowWidth - 20 });
       }
       gmove = false;
     });
@@ -379,9 +383,9 @@ function tagConfingSet(el, config) {
 function init() {
   generateImgContent();
   generateBtn();
-  chrome.storage.local.get('bgImgDbImg', function(res) {
-    const img = res.bgImgDbImg || '';
-    changebg(1,img);
+  chrome.storage.local.get("bgImgDbImg", function (res) {
+    const img = res.bgImgDbImg || "";
+    changebg(1, img);
   });
 }
 function keyDown() {
@@ -396,7 +400,7 @@ function keyDown() {
       }
     }
     //alt + x/w 切换图片(可能会被截屏占用快捷键)
-    else if (event.altKey && [87,88].includes(event.keyCode)) {
+    else if (event.altKey && [87, 88].includes(event.keyCode)) {
       if (!isHide) {
         changebg(4);
       }
@@ -411,7 +415,7 @@ function keyDown() {
 }
 
 init();
-changebg(1,localJData.img);
+changebg(1, localJData.img);
 keyDown();
 
 function getImgList() {
