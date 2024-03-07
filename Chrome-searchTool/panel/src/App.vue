@@ -88,7 +88,7 @@ export default {
     },
     keydownFnListening(dom = window) {
       dom.addEventListener("keydown", function (e) {
-        if (e.ctrlKey && e.key === "f") {
+        if (e.altKey && e.key === "g") {
           e.preventDefault();
           // 执行自定义操作
           // this.ctrlFAction();
@@ -117,7 +117,7 @@ export default {
         if (query === "") {
           query = localStorage.getItem("chromeSearchQueryKeyJY") || "";
         }
-        if (event.ctrlKey && event.key === "f") {
+        if (event.altKey && event.key === "g") {
           this.query = query;
           event.preventDefault();
           this.ctrlFAction(query);
