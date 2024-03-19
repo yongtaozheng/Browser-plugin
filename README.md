@@ -48,7 +48,7 @@ Chrome 浏览器桌面换肤插件，可以选择自己喜欢的图片作为浏�
 
 ### 8、chrome-bookmarks-manage chrome 浏览器书签同步管理工具
 
-##### 9、Chrome-searchTool Chrome 正则搜索框
+### 9、Chrome-searchTool Chrome 正则搜索框
 
 实现一个可以支持正则的 Chrome 浏览器页面搜索框。
 
