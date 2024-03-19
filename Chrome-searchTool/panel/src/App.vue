@@ -4,7 +4,7 @@
     v-show="showPanel"
     :style="{ top: dragData.top + 'px', left: dragData.left + 'px' }"
   >
-    <input id="chromeSearchInput" :value="query" @input="updateQuery" />
+    <input id="chromeSearchInput" v-model="query" />
     <div id="chromeSearchTool">
       <span class="chrome-search-tool-num" v-if="query !== ''"
         >{{ matches.length ? index + 1 : 0 }}/{{ matches.length }}</span
@@ -30,6 +30,7 @@ export default {
       debounceTime: 500,
       keydownFnTimer: null,
       matches: [],
+      domList: [],
       dragData: {
         isDragging: false,
         top: window.innerHeight * 0.05,
@@ -47,6 +48,9 @@ export default {
       if (oldSpan) oldSpan.style.backgroundColor = "yellow";
       const newSpan = spans[newVal];
       if (newSpan) newSpan.style.backgroundColor = "orange";
+    },
+    query(newVal, oldVal) {
+      this.inputComplate(newVal);
     },
   },
   mounted() {
@@ -90,8 +94,6 @@ export default {
       dom.addEventListener("keydown", function (e) {
         if (e.altKey && e.key === "g") {
           e.preventDefault();
-          // 执行自定义操作
-          // this.ctrlFAction();
           if (dom.e && dom.e.returnValue) dom.e.returnValue = false;
           return false;
         }
@@ -125,17 +127,6 @@ export default {
       }, 200);
     },
     init() {
-      const chromeSearchInput = document.getElementById("chromeSearchInput");
-      // 在compositionstart事件发生时暂停updateQuery方法的执行
-      chromeSearchInput.addEventListener("compositionstart", () => {
-        this.isComposing = true;
-      });
-      // 在compositionend事件发生时恢复updateQuery方法的执行
-      chromeSearchInput.addEventListener("compositionend", () => {
-        this.isComposing = false;
-        const query = chromeSearchInput.value;
-        this.inputComplate(query);
-      });
       this.keydownFnListening();
       this.addCustomSearchEventListener(document);
       const iframes = document.querySelectorAll("iframe");
@@ -149,22 +140,12 @@ export default {
         }
       }
     },
-    updateQuery(event) {
-      if (this.isComposing) return;
-      const query = event.target.value;
-      this.inputComplate(query);
-    },
     inputComplate(query) {
       clearTimeout(this.debounceTimer);
       this.debounceTimer = setTimeout(() => {
         this.query = query;
         this.performCustomSearch(query);
       }, this.debounceTime); // 设置防抖延迟时间
-    },
-    triggerInputEvent() {
-      const inputEvent = new Event("input", { bubbles: true });
-      const chromeSearchInput = document.getElementById("chromeSearchInput");
-      chromeSearchInput.dispatchEvent(inputEvent);
     },
     closePanel() {
       this.showPanel = false;
@@ -179,6 +160,24 @@ export default {
       }
       return selectedText;
     },
+    getChromeSearchResultItem(doc = document) {
+      const domList = document.querySelectorAll(".chromeSearchResultItem");
+      let matches = [...domList];
+      matches = matches.filter((item) => {
+        const rect = item.getBoundingClientRect();
+        return rect.height > 0 && rect.width > 0;
+      });
+      matches.sort((a, b) => {
+        const rectA = a.getBoundingClientRect();
+        const rectB = b.getBoundingClientRect();
+        if (rectA.top === rectB.top) return rectA.left - rectB.left;
+        return rectA.top - rectB.top;
+      });
+      return {
+        domList,
+        matches,
+      };
+    },
     performCustomSearch(query) {
       this.clearFlag();
       if (query === "") {
@@ -186,22 +185,25 @@ export default {
       }
       localStorage.setItem("chromeSearchQueryKeyJY", query);
       this.searchInNode(document.body, query); // 在主页面中搜索
-      this.matches = [...document.querySelectorAll(".chromeSearchResultItem")];
+      const { domList, matches } = this.getChromeSearchResultItem(document);
+      this.matches = [...matches];
+      this.domList = domList;
       const iframes = document.querySelectorAll("iframe");
       for (let i = 0; i < iframes.length; i++) {
         try {
           const iframeDocument = iframes[i].contentDocument;
           if (iframeDocument.body)
             this.searchInNode(iframeDocument.body, query); // 在每个iframe内部搜索
-          this.matches.push(
-            ...iframeDocument.querySelectorAll(".chromeSearchResultItem")
-          );
+          const { domList, matches } =
+            this.getChromeSearchResultItem(iframeDocument);
+          this.matches.push(...matches);
+          this.domList.push(...domList);
         } catch (e) {
           console.error("Error accessing iframe content:", e);
         }
       }
       this.index = -1;
-      this.changeIndex(1);
+      this.showMatch = this.changeIndex(1);
     },
     escapeRegExp(string) {
       return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -239,7 +241,7 @@ export default {
       }
     },
     clearFlag() {
-      const spans = this.matches;
+      const spans = this.domList;
       spans.forEach((span) => {
         if (span.parentNode) {
           span.parentNode.innerHTML = span.parentNode.innerHTML.replace(
@@ -249,6 +251,7 @@ export default {
         }
       });
       this.matches = [];
+      this.domList = [];
       this.index = -1;
     },
     changeIndex(delta) {
