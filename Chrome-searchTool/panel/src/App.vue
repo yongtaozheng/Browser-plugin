@@ -180,9 +180,7 @@ export default {
     },
     performCustomSearch(query) {
       this.clearFlag();
-      if (query === "") {
-        return;
-      }
+      if (query === "") return;
       localStorage.setItem("chromeSearchQueryKeyJY", query);
       this.searchInNode(document.body, query); // 在主页面中搜索
       const { domList, matches } = this.getChromeSearchResultItem(document);
