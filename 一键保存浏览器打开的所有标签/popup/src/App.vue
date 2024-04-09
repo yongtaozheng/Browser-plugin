@@ -7,18 +7,22 @@
 }"
     >
       <el-tab-pane label="配置管理"><configView></configView></el-tab-pane>
-      <el-tab-pane label="浏览器标签记录">浏览器标签记录</el-tab-pane>
+      <el-tab-pane label="浏览器标签记录"
+        ><historyList></historyList
+      ></el-tab-pane>
     </el-tabs>
   </div>
 </template>
 
 <script>
 import configView from "./components/configView.vue";
+import historyList from "./components/historyList.vue";
 
 export default {
   name: "appJYChromeTab",
   components: {
     configView,
+    historyList,
   },
 };
 </script>

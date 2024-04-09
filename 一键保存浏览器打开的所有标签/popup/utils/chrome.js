@@ -1,9 +1,7 @@
 const chrome = window.chrome;
 
-export const getChromeTab = (
-  config = { active: true, currentWindow: true }
-) => {
-  return Promise((resolve) => {
+export const getChromeTab = (config = {}) => {
+  return new Promise((resolve) => {
     chrome.tabs.query(config, function (tab) {
       resolve(tab);
     });
@@ -13,11 +11,11 @@ export const getChromeTab = (
 export const sendMessageByRule = (config, params, cb) => {
   chrome.tabs.query(
     { active: config.active, currentWindow: config.currentWindow },
-    function (tab) {
-      for (let i = 0; i < tab.length; i++) {
-        if (tab[i].url.includes(config.url)) {
-          chrome.tabs.sendMessage(tab[i].id, params, function (response) {
-            cb && cb(response);
+    function (tabs) {
+      for (const tab of tabs) {
+        if (tab.url.includes(config.url)) {
+          chrome.tabs.sendMessage(tab.id, params, function (response) {
+            if (cb) cb(response);
           });
         }
       }

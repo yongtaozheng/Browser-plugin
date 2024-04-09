@@ -42,7 +42,41 @@ async function putFileContent(apiUrl, accessToken, encodedContent, sha) {
     alert("上传书签数据失败");
   }
 }
+async function createFileOnGitee(
+  apiUrl,
+  accessToken,
+  fileContent,
+  commitMessage = "更新浏览器标签"
+) {
+  const data = {
+    content: btoa(encodeURIComponent(fileContent)), // 将文件内容转换为Base64编码
+    message: commitMessage, // 提交信息
+    branch: "master", // 指定分支，默认为master
+    access_token: accessToken, // 你的Gitee Access Token
+  };
+  try {
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `token ${accessToken}`,
+      },
+      body: JSON.stringify(data),
+    });
 
+    if (response.ok) {
+      const result = await response.json();
+      console.log("File created successfully:", result);
+      return result;
+    } else {
+      console.error("Failed to create file:", await response.json());
+      throw new Error("Failed to create file");
+    }
+  } catch (error) {
+    console.error("An error occurred:", error);
+    throw error;
+  }
+}
 export async function modifyFile(gitInfo, modifiedContent, isCover) {
   const accessToken = gitInfo.token;
   const apiUrl =
@@ -66,9 +100,10 @@ export async function modifyFile(gitInfo, modifiedContent, isCover) {
     const encodedContent = btoa(
       String.fromCharCode.apply(null, new Uint8Array(data))
     );
-
-    await putFileContent(apiUrl, accessToken, encodedContent, file.sha);
+    if (!file.sha) await createFileOnGitee(apiUrl, accessToken, encodedContent);
+    else await putFileContent(apiUrl, accessToken, encodedContent, file.sha);
   } catch (error) {
+    console.log("%c Line:105 🥚 error", "color:#465975", error);
     alert("An error occurred:", error);
   }
 }
@@ -84,11 +119,61 @@ export async function getFile(gitInfo) {
     gitInfo.filePath;
 
   const file = await fetchFileContent(apiUrl, accessToken);
-  const fileContent = file.content || "";
-  const decodedContent = atob(fileContent); // 解码Base64编码的文件内容
-  const decoder = new TextDecoder();
-  const decodedData = decoder.decode(
-    new Uint8Array([...decodedContent].map((char) => char.charCodeAt(0)))
-  );
-  return JSON.parse(decodedData);
+  try {
+    const fileContent = file.content || "";
+    const decodedContent = atob(fileContent); // 解码Base64编码的文件内容
+    const decoder = new TextDecoder();
+    const decodedData = decoder.decode(
+      new Uint8Array([...decodedContent].map((char) => char.charCodeAt(0)))
+    );
+    return JSON.parse(decodedData);
+  } catch (err) {
+    return "";
+  }
+}
+export async function checkFileExistenceOnGitee(gitInfo) {
+  const { owner, repo, filePath } = gitInfo;
+  const url = `https://gitee.com/api/v5/repos/${owner}/${repo}/contents/${filePath}`;
+  try {
+    const response = await fetch(url);
+    if (response.status === 200) {
+      // 文件存在
+      return true;
+    } else if (response.status === 404) {
+      // 文件不存在
+      return false;
+    } else {
+      // 其他 HTTP 错误
+      throw new Error(`Failed to fetch file information: ${response.status}`);
+    }
+  } catch (error) {
+    // 网络错误或其他异常
+    console.error(
+      "An error occurred while checking the file existence:",
+      error
+    );
+    return null;
+  }
+}
+export async function getFileContentFromGitee(gitInfo) {
+  const { owner, repo, filePath } = gitInfo;
+  const accessToken = "YOUR_ACCESS_TOKEN";
+  const url = `https://gitee.com/api/v5/repos/${owner}/${repo}/contents/${filePath}`;
+  const headers = {
+    Authorization: `token ${accessToken}`,
+  };
+
+  try {
+    const response = await fetch(url, { headers });
+    if (response.ok) {
+      const data = await response.json();
+      const content = atob(data.content); // Base64 解码
+      return content;
+    } else {
+      throw new Error(`Failed to fetch file: ${response.status}`);
+    }
+  } catch (error) {
+    console.error("An error occurred:", error);
+    throw error;
+  }
 }

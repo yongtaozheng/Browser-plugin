@@ -1,47 +1,26 @@
 <template>
-  <div class="book-mark-panel">
-    <div class="book-mark-panel-input row">
+  <div class="config-view">
+    <div
+      v-for="(item, index) in gitInfoList"
+      :key="item.ename + index"
+      class="config-view-row"
+    >
+      <div class="config-view-row-label">{{ item.name }}</div>
       <input
         id="token"
-        v-model="gitInfo.token"
+        v-model="gitInfo[item.ename]"
         type="text"
-        placeholder="token"
+        :placeholder="item.name"
         @change="dataChange"
       />
-      <div class="">
+      <div>
         <a
+          v-if="item.name == 'token'"
           href="https://gitee.com/api/v5/swagger#/getV5ReposOwnerRepoStargazers?ex=no"
           target="_blank"
           >前往获取</a
         >
       </div>
-    </div>
-    <div class="book-mark-panel-input row">
-      <input
-        id="owner"
-        v-model="gitInfo.owner"
-        type="text"
-        placeholder="仓库所属空间地址"
-        @change="dataChange"
-      />
-    </div>
-    <div class="book-mark-panel-input row">
-      <input
-        id="repo"
-        v-model="gitInfo.repo"
-        type="text"
-        placeholder="仓库路径"
-        @change="dataChange"
-      />
-    </div>
-    <div class="book-mark-panel-input row">
-      <input
-        id="filePath"
-        v-model="gitInfo.filePath"
-        type="text"
-        placeholder="文件保存目录"
-        @change="dataChange"
-      />
     </div>
   </div>
 </template>
@@ -59,6 +38,24 @@ export default {
         repo: "",
         filePath: "",
       },
+      gitInfoList: [
+        {
+          name: "token",
+          ename: "token",
+        },
+        {
+          name: "仓库所属空间地址",
+          ename: "owner",
+        },
+        {
+          name: "仓库路径",
+          ename: "repo",
+        },
+        {
+          name: "文件保存目录",
+          ename: "filePath",
+        },
+      ],
       indexedDB: null,
     };
   },
@@ -90,17 +87,21 @@ export default {
 </script>
 
 <style scoped lang="less">
-.book-mark-panel {
-  .row {
-    margin: 10px;
+.config-view {
+  &-row {
+    margin-bottom: 10px;
+    text-align: center;
+    &-label {
+      font-weight: bold;
+      color: orange;
+    }
+    input {
+      text-align: center;
+      line-height: 1.5em;
+    }
     .btn {
       margin: 5px;
     }
-  }
-  .book-mark-panel-tip {
-    color: #056eef;
-  }
-  .book-mark-panel-input {
   }
 }
 </style>
