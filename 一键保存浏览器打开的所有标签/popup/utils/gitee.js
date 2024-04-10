@@ -1,5 +1,3 @@
-import { mergeBookmarks } from "./chrome";
-
 async function getDecodedContent(content) {
   const decodedContent = atob(content); // 解码Base64编码的文件内容
   const decoder = new TextDecoder();
@@ -37,9 +35,9 @@ async function putFileContent(apiUrl, accessToken, encodedContent, sha) {
   });
 
   if (putResponse.ok) {
-    alert("已上传书签数据");
+    alert("已成功上传");
   } else {
-    alert("上传书签数据失败");
+    alert("上传数据失败");
   }
 }
 async function createFileOnGitee(
@@ -89,11 +87,6 @@ export async function modifyFile(gitInfo, modifiedContent, isCover) {
 
   try {
     const file = await fetchFileContent(apiUrl, accessToken);
-    const fileContent = file.content || "";
-    if (!isCover) {
-      const content = await getDecodedContent(fileContent);
-      modifiedContent = mergeBookmarks(content, modifiedContent);
-    }
     modifiedContent = JSON.stringify(modifiedContent);
     const encoder = new TextEncoder();
     const data = encoder.encode(modifiedContent);
@@ -155,25 +148,27 @@ export async function checkFileExistenceOnGitee(gitInfo) {
     return null;
   }
 }
-export async function getFileContentFromGitee(gitInfo) {
-  const { owner, repo, filePath } = gitInfo;
-  const accessToken = "YOUR_ACCESS_TOKEN";
-  const url = `https://gitee.com/api/v5/repos/${owner}/${repo}/contents/${filePath}`;
-  const headers = {
-    Authorization: `token ${accessToken}`,
-  };
-
+export async function getGiteeList(gitInfo) {
+  const { token: accessToken, owner, repo, dirPath } = gitInfo;
   try {
-    const response = await fetch(url, { headers });
+    const response = await fetch(
+      `https://gitee.com/api/v5/repos/${owner}/${repo}/contents/${dirPath}`,
+      {
+        headers: {
+          Authorization: `token ${accessToken}`,
+        },
+      }
+    );
+
     if (response.ok) {
-      const data = await response.json();
-      const content = atob(data.content); // Base64 解码
-      return content;
+      const fileList = await response.json();
+      return fileList.map((item) => item.name);
     } else {
-      throw new Error(`Failed to fetch file: ${response.status}`);
+      console.error(`Error: ${response.status}`);
+      return null;
     }
   } catch (error) {
-    console.error("An error occurred:", error);
-    throw error;
+    console.error("Error:", error.message);
+    return null;
   }
 }

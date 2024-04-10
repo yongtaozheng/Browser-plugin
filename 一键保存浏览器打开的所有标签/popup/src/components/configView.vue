@@ -26,8 +26,6 @@
 </template>
 
 <script>
-import { IndexedDB } from "../../utils/indexDB";
-
 export default {
   name: "HelloWorld",
   data() {
@@ -60,27 +58,17 @@ export default {
     };
   },
   created() {
-    const indexedDB = new IndexedDB("gitInfoDb", "chromeTab");
-    this.indexedDB = indexedDB;
-    indexedDB
-      .createDatabase()
-      .then(() => {
-        console.log("Database created successfully or already exists");
-        return indexedDB.open();
-      })
-      .then(async () => {
-        // 进行其他操作
-        const res = (await indexedDB.getById("data")) || this.gitInfo;
-        this.gitInfo = res;
-      })
-      .catch((error) => {
-        console.error("Failed to create or open database:", error);
-      });
+    this.getStorage();
   },
   mounted() {},
   methods: {
     dataChange() {
-      this.indexedDB.update("data", this.gitInfo);
+      // this.indexedDB.update("data", this.gitInfo);
+      localStorage.setItem("gitInfoJY", JSON.stringify(this.gitInfo));
+    },
+    getStorage() {
+      this.gitInfo =
+        JSON.parse(localStorage.getItem("gitInfoJY")) || this.gitInfo;
     },
   },
 };

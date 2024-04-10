@@ -3,13 +3,17 @@
     <el-tabs
       id="appJYChromeTabElTabs"
       type="border-card"
-      style="height: 100%;
-}"
+      style="
+        height: 100%;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      "
     >
-      <el-tab-pane label="配置管理"><configView></configView></el-tab-pane>
       <el-tab-pane label="浏览器标签记录"
         ><historyList></historyList
       ></el-tab-pane>
+      <el-tab-pane label="配置管理"><configView></configView></el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -27,6 +31,18 @@ export default {
 };
 </script>
 
+<style>
+.el-tabs__content {
+  overflow: scroll !important;
+  height: 100%;
+}
+.el-tab-pane {
+  height: 100%;
+}
+.el-collapse-item__content {
+  padding-bottom: 0 !important;
+}
+</style>
 <style lang="less" scoped>
 #appJYChromeTab {
   font-family: Avenir, Helvetica, Arial, sans-serif;
