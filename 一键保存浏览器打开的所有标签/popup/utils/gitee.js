@@ -47,7 +47,7 @@ async function createFileOnGitee(
   commitMessage = "更新浏览器标签"
 ) {
   const data = {
-    content: btoa(encodeURIComponent(fileContent)), // 将文件内容转换为Base64编码
+    content: fileContent, // 将文件内容转换为Base64编码
     message: commitMessage, // 提交信息
     branch: "master", // 指定分支，默认为master
     access_token: accessToken, // 你的Gitee Access Token
