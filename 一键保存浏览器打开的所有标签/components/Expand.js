@@ -48,15 +48,13 @@ if (!window.ExpandJY) {
       });
       let title = config.title || "标题";
       if (typeof title === "string") {
-        const titleDom = document.createElement("h3");
+        const titleDom = document.createElement("div");
         titleDom.innerText = title;
         title = titleDom;
       }
-      title.style = this.obj2Style({
-        padding: "10px 0",
-        margin: "0 10px",
-        flex: 1,
-      });
+      title.style.padding = "10px 0";
+      title.style.margin = "0 10px";
+      title.style.flex = 1;
       const operateBox = document.createElement("div");
       const btn = this.generateBtn(this.isOpen ? "收起" : "展开", () => {
         this.isOpenChange();

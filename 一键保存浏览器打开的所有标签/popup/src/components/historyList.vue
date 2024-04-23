@@ -1,6 +1,13 @@
 <template>
-  <div style="display: flex; flex-direction: column; height: 100%">
-    <el-collapse style="flex: 1" v-model="activeName" accordion>
+  <div
+    class="history-list-wrapper"
+    style="display: flex; flex-direction: column; height: 100%"
+  >
+    <el-collapse
+      style="flex: 1; overflow: scroll"
+      v-model="activeName"
+      accordion
+    >
       <el-collapse-item
         v-for="historyItem in historyDirList"
         :key="historyItem.name"
@@ -19,18 +26,47 @@
               }}<i
                 style="margin-left: 1em"
                 class="header-icon el-icon-monitor"
+                title="打开全部窗口"
                 @click="openUrls(listItem.value)"
               ></i>
             </template>
-            <div
-              class="list-item-div"
-              v-for="item in listItem.value"
-              :key="item.id"
-              @click="urlClick(item)"
-              :title="item.title"
-            >
-              {{ item.title }}
-            </div>
+            <el-tabs :tab-position="'right'" style="height: 200px">
+              <el-tab-pane
+                v-for="(windowItem, windowIndex) in getListGroup(
+                  listItem.value
+                )"
+                :key="'window' + windowIndex"
+                :label="'窗口' + (windowIndex + 1)"
+              >
+                <div
+                  style="
+                    display: flex;
+                    flex-direction: column;
+                    overflow: hidden;
+                    height: 100%;
+                  "
+                >
+                  <div class="window-btn" @click="openUrls(windowItem)">
+                    一键打开当前窗口所有url
+                    <i
+                      class="header-icon el-icon-monitor"
+                      title="一键打开当前窗口所有url"
+                    ></i>
+                  </div>
+                  <div style="flex: 1; overflow: scroll">
+                    <div
+                      class="list-item-div"
+                      v-for="item in windowItem"
+                      :key="item.id"
+                      @click="urlClick(item)"
+                      :title="item.title"
+                    >
+                      {{ item.title }}
+                    </div>
+                  </div>
+                </div>
+              </el-tab-pane>
+            </el-tabs>
           </el-collapse-item>
         </el-collapse>
       </el-collapse-item>
@@ -69,6 +105,15 @@ export default {
     },
   },
   methods: {
+    getListGroup(list) {
+      const groupMap = {};
+      list.forEach((item) => {
+        const val = groupMap[item.windowId] || [];
+        val.push(item);
+        groupMap[item.windowId] = val;
+      });
+      return Object.values(groupMap) || [];
+    },
     getStorage() {
       this.gitInfo =
         JSON.parse(localStorage.getItem("gitInfoJY")) || this.gitInfo;
@@ -121,9 +166,18 @@ export default {
     },
     openUrls(list) {
       // 定义要打开的URL数组
-      const urls = list.map((item) => item.url);
-      // 创建一个新窗口
-      chrome.windows.create({ url: urls, type: "normal" });
+      const lists = this.getListGroup(list);
+      let tip = `确定打开以下${lists.length}个窗口?`;
+      if (lists.length === 1) {
+        tip = "确定打开以下窗口？";
+      }
+      if (confirm(tip)) {
+        lists.forEach((urls) => {
+          urls = urls.map((item) => item.url);
+          // 创建一个新窗口
+          chrome.windows.create({ url: urls, type: "normal" });
+        });
+      }
     },
     async saveTabs() {
       const tabs = await getChromeTab();
@@ -138,6 +192,25 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.history-list-wrapper {
+  overflow-y: scroll;
+  scrollbar-width: none; /* 适用于大多数现代浏览器 */
+}
+
+/* 针对旧版IE浏览器 */
+.history-list-wrapper::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+.window-btn {
+  color: skyblue;
+  cursor: pointer;
+  font-size: 1.2em;
+  text-decoration: underline;
+  position: relative;
+  top: 0;
+  margin: auto;
+}
 .list-item-div {
   text-align: left;
   color: blue;

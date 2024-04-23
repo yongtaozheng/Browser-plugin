@@ -33,7 +33,7 @@ export default {
 
 <style>
 .el-tabs__content {
-  overflow: scroll !important;
+  overflow: hidden !important;
   height: 100%;
 }
 .el-tab-pane {
@@ -51,8 +51,8 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 10px;
-  width: 500px;
-  height: 300px;
+  width: 600px;
+  height: 500px;
   #appJYChromeTabElTabs {
     // background: url("./assets/logo.png") no-repeat center center / cover;
   }
