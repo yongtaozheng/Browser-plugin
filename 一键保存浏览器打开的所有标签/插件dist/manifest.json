@@ -1,0 +1,50 @@
+{
+  "manifest_version": 3,
+  "name": "一键保存浏览器打开的所有标签",
+  "version": "1.0.0",
+  "description": "vue框架快速开发chrome插件",
+  "icons": {
+    "16": "img/logo.jpg",
+    "48": "img/logo.jpg",
+    "128": "img/logo.jpg"
+  },
+  "action": {
+    "default_title": "一键保存浏览器打开的所有标签",
+    "default_icon": "img/logo.jpg",
+    "default_popup": "popup/dist/index.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "bg.js",
+        "contentScript.js"
+      ],
+      "run_at": "document_end",
+      "css": [
+        "myStyle.css",
+        "panel/dist/css/panel.css"
+      ]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "panel/dist/js/app.d85eb57e.js",
+        "panel/dist/js/chunk-vendors.d4240060.js",
+        "combinAllJs.js"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ],
+  "permissions": [
+    "tabs",
+    "activeTab",
+    "storage",
+    "windows"
+  ]
+}
