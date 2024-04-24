@@ -21,7 +21,7 @@ async function putFileContent(apiUrl, accessToken, encodedContent, sha) {
   const commitData = {
     access_token: accessToken,
     content: encodedContent,
-    message: "书签更新",
+    message: "更新浏览器标签",
     sha: sha,
   };
 
