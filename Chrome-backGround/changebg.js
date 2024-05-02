@@ -413,10 +413,19 @@ function keyDown() {
     }
   });
 }
-
-init();
-changebg(1, localJData.img);
-keyDown();
+const excludedList = ["codepen"];
+let isRun = true;
+for (const item of excludedList) {
+  if (location.href.includes(item)) {
+    isRun = false;
+    break;
+  }
+}
+if (isRun) {
+  init();
+  changebg(1, localJData.img);
+  keyDown();
+}
 
 function getImgList() {
   const appendImgList = [
