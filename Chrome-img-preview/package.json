@@ -1,0 +1,29 @@
+{
+  "name": "Chrome-img-preview",
+  "version": "1.0.0",
+  "description": "浏览器图片预览插件",
+  "main": "bg.js",
+  "scripts": {
+    "prepare": "node prepare.js",
+    "build": "node build.js",
+    "init": "node init.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitee.com/zheng_yongtao/vue-chrome-extension-quickstart"
+  },
+  "keywords": [
+    "chrome插件",
+    "vue",
+    "JYeontu"
+  ],
+  "author": "JYeontu",
+  "license": "ISC",
+  "dependencies": {
+    "@jyeontu/j-inquirer": "^1.0.5",
+    "child_process": "^1.0.2",
+    "fs-extra": "^11.2.0",
+    "uglify-js": "^3.17.4",
+    "figlet": "^1.7.0"
+  }
+}
