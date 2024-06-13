@@ -3,6 +3,9 @@
   "name": "ChromeImgPreview",
   "version": "1.0.0",
   "description": "vue框架快速开发chrome插件",
+  "background": {
+    "service_worker": "bg.js"
+  },
   "icons": {
     "16": "img/logo.jpg",
     "48": "img/logo.jpg",
@@ -19,7 +22,7 @@
         "<all_urls>"
       ],
       "js": [
-        "bg.js",
+        "bg1.js",
         "contentScript.js"
       ],
       "run_at": "document_end",
@@ -44,6 +47,7 @@
   "permissions": [
     "tabs",
     "activeTab",
-    "storage"
+    "storage",
+    "contextMenus"
   ]
 }

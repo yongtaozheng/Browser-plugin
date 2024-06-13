@@ -183,6 +183,7 @@ async function createDist() {
     "manifest.json",
     "img",
     "bg.js",
+    "bg1.js",
     "contentScript.js",
     "myStyle.css",
     "combinAllJs.js",
