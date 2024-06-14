@@ -27,6 +27,8 @@
       });
     }
   } catch (err) {
+    localStorage.setItem("isMediaRecorderEnd", false);
+    sendMessage("stopMediaRecorder");
     console.error(err);
   }
 })();

@@ -9,7 +9,7 @@ function generateRandomString(length) {
   return result;
 }
 
-const id = generateRandomString(8);
+const id = "screenRecording"; //generateRandomString(8);
 function contextMenus() {
   chrome.contextMenus.create({
     title: "开始录屏", //菜单的名称
@@ -21,6 +21,7 @@ function contextMenus() {
     if (info.menuItemId == id) {
       var createData = {
         url: "https://baidu.com?isStartMediaRecorder=1",
+        // url: chrome.runtime.getURL("recorder.html"),
         type: "normal",
         top: 200,
         left: 300,
@@ -32,7 +33,11 @@ function contextMenus() {
     }
   });
 }
-contextMenus();
+try {
+  contextMenus();
+} catch (err) {
+  console.warn(err);
+}
 
 let activeTab = "";
 
@@ -47,13 +52,3 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     });
   }
 });
-
-// storage.get({
-//   nikeEnv: 'staging',
-//   pages: pageString,
-//   envSwitch: false
-// },(obj)=>{
-//       if(obj.pages && typeof obj.pages === 'string') pageStatus = JSON.parse(obj.pages);
-//       nikeEnv = obj.nikeEnv;
-//       envSwitch = obj.envSwitch;
-// });

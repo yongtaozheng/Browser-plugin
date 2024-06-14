@@ -187,6 +187,7 @@ async function createDist() {
     "contentScript.js",
     "myStyle.css",
     "combinAllJs.js",
+    "recorder.html",
   ];
   for (const file of cpFileList) {
     fs.copySync(file, "dist/" + file);
