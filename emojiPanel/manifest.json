@@ -1,0 +1,61 @@
+{
+  "manifest_version": 3,
+  "name": "emojiPanel",
+  "version": "1.0.0",
+  "description": "emoji面板插件",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "icons": {
+    "16": "img/logo.jpg",
+    "48": "img/logo.jpg",
+    "128": "img/logo.jpg"
+  },
+  "action": {
+    "default_title": "emojiPanel",
+    "default_icon": "img/logo.jpg",
+    "default_popup": "popup/dist/index.html"
+  },
+  "commands": {
+    "open_popup": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+E"
+      },
+      "description": "Open the popup page of the extension"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "bg.js",
+        "contentScript.js"
+      ],
+      "run_at": "document_end",
+      "css": [
+        "myStyle.css",
+        "panel/dist/css/panel.css"
+      ]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "panel/dist/js/app.b6af563e.js",
+        "panel/dist/js/chunk-vendors.8f6a52f1.js",
+        "combinAllJs.js"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ],
+  "permissions": [
+    "tabs",
+    "activeTab",
+    "storage",
+    "commands"
+  ]
+}
