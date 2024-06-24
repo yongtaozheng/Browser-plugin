@@ -29,8 +29,9 @@
         >
       </div>
       <div>
-        插件源码：<a href="https://www.emojiall.com/zh-hans/all-emojis"
-          >https://www.emojiall.com/zh-hans/all-emojis</a
+        插件源码：<a
+          href="https://gitee.com/zheng_yongtao/chrome-plug-in/tree/master/emojiPanel"
+          >https://gitee.com/zheng_yongtao/chrome-plug-in/tree/master/emojiPanel</a
         >
       </div>
     </div>
