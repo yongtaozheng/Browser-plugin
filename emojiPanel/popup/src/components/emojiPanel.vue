@@ -24,13 +24,20 @@
       <div>点击emoji即可复制到剪切板</div>
       <div>📨公众号：<span style="color: orange">前端也能这么有趣</span></div>
       <div>
-        数据来源：<a href="https://www.emojiall.com/zh-hans/all-emojis"
+        数据来源：<a
+          href="https://www.emojiall.com/zh-hans/all-emojis"
+          @click="openUrl('https://www.emojiall.com/zh-hans/all-emojis')"
           >https://www.emojiall.com/zh-hans/all-emojis</a
         >
       </div>
       <div>
         插件源码：<a
           href="https://gitee.com/zheng_yongtao/chrome-plug-in/tree/master/emojiPanel"
+          @click="
+            openUrl(
+              'https://gitee.com/zheng_yongtao/chrome-plug-in/tree/master/emojiPanel'
+            )
+          "
           >https://gitee.com/zheng_yongtao/chrome-plug-in/tree/master/emojiPanel</a
         >
       </div>
@@ -63,6 +70,34 @@ export default {
         .catch((err) => {
           this.$message.error("复制失败：", err);
         });
+    },
+    openUrl(url) {
+      chrome.windows.create(
+        {
+          url: [url],
+          type: "normal",
+          width: screen.availWidth, // 设置窗口宽度为屏幕可用宽度
+          height: screen.availHeight, // 设置窗口高度为屏幕可用高度
+          left: 0, // 窗口左上角的屏幕坐标，通常设置为0
+          top: 0, // 窗口左上角的屏幕坐标，通常设置为0
+        }
+        // function (newWindow) {
+        //   var windowId = newWindow.id;
+
+        //   // 将新创建的窗口设置为全屏
+        //   chrome.windows.update(
+        //     windowId,
+        //     {
+        //       state: "fullscreen",
+        //     },
+        //     function () {
+        //       if (chrome.runtime.lastError) {
+        //         console.error(chrome.runtime.lastError.message);
+        //       }
+        //     }
+        //   );
+        // }
+      );
     },
   },
 };

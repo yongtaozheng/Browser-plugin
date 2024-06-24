@@ -56,6 +56,7 @@
     "tabs",
     "activeTab",
     "storage",
-    "commands"
+    "commands",
+    "windows"
   ]
 }
